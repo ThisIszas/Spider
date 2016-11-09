@@ -11,9 +11,9 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         super(RebuildFrame, self).__init__(*args, **kwargs)
         self.CreateStatusBar()
 
-        notebook = wx.Notebook(self)
-        panel_1 = wx.Panel(self)
-        notebook.AddPage(panel_1, "Test")
+        #self.notebook.CentreOnParent()
+        # form1 = ATestPanel(self.notebook)
+        # self.notebook.AddPage(form1, "test")
 
         filemenu = wx.Menu()
         filemenu.Append(wx.ID_ABOUT, "&About", " Information about this program.")
@@ -26,7 +26,10 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         menu_bar.Append(filemenu, "&File")
         self.SetMenuBar(menu_bar)
 
-        self.login_panel = wx.Panel(self)
+        self.login_panel = wx.Panel(self, 1)
+
+        self.notebook = wx.Notebook(self.login_panel, size=(830, 400))
+        self.notebook.Show(False)
 
         self.login_name_Label = wx.StaticText(self.login_panel, label=u"学生成绩管理系统")
         self.confirm_button = wx.Button(self.login_panel, label=u"登录")
@@ -52,11 +55,33 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
             control.SetDimensions(x=x, y=y, width=width, height=height)
 
     def confisrm_button(self, event):
-        self.login_panel.Show(False)
-        notebook = wx.Notebook(self)
-        panel_1 = wx.Panel(self)
-        notebook.AddPage(panel_1, "Test")
+        self.notebook.Show(True)
+        form1 = ATestPanel(self.notebook)
+        form2 = ATestPanel2(self.notebook)
+        form3 = ATestPanel3(self.notebook)
+        self.notebook.AddPage(form1, "test")
+        self.notebook.AddPage(form2, "test1")
+        self.notebook.AddPage(form3, "test2")
+
+
+class ATestPanel(wx.Panel):
+    def __init__(self,  *args, **kwargs):
+        super(ATestPanel, self).__init__(*args, **kwargs)
+        self.login_name_label = wx.StaticText(self, label=u"妈的.终于写完框架了-1", pos=(120, 160))
+
+
+class ATestPanel2(wx.Panel):
+    def __init__(self,  *args, **kwargs):
+        super(ATestPanel2, self).__init__(*args, **kwargs)
+        self.login_name_label = wx.StaticText(self, label=u"妈的.终于写完框架了-2", pos=(120, 160))
+
+
+class ATestPanel3(wx.Panel):
+    def __init__(self,  *args, **kwargs):
+        super(ATestPanel3, self).__init__(*args, **kwargs)
+        self.login_name_label = wx.StaticText(self, label=u"妈的.终于写完框架了-3", pos=(120, 160))
 
 app = wx.App(False)
 frame = RebuildFrame(None, title=u'学生数据库管理系统')
 app.MainLoop()
+
