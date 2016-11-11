@@ -13,10 +13,6 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         super(RebuildFrame, self).__init__(*args, **kwargs)
         self.CreateStatusBar()
 
-        #self.notebook.CentreOnParent()
-        # form1 = ATestPanel(self.notebook)
-        # self.notebook.AddPage(form1, "test")
-
         filemenu = wx.Menu()
         filemenu.Append(wx.ID_ABOUT, "&About", " Information about this program.")
         filemenu.AppendSeparator()
@@ -69,12 +65,19 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
 class BaseInfoOfStudentPanel(wx.Panel):
     def __init__(self,  *args, **kwargs):
         super(BaseInfoOfStudentPanel, self).__init__(*args, **kwargs)
-        font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
+        title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
 
         self.login_name_label = wx.StaticText(self, label=u"学生基本信息管理", pos=(308, 10))
-        self.login_name_label.SetFont(font)
+        select_item_label = wx.StaticText(self, label=u"查询项:", pos=(10, 10))
+        value_label = wx.StaticText(self, label=u"值:", pos=(96, 10))
+        self.login_name_label.SetFont(title_font)
         self.login_name_label.SetForegroundColour("#21c4c3")  # 设置字体颜色
 
+        select_item_list = [u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
+        self.SelectButton = wx.Button(self, label=u'查询', pos=(144, 30), size=(33, 25))
+        select_items = wx.ComboBox(self, pos=(10, 30), size=(80, -1), choices=select_item_list,
+                                   style=wx.CB_DROPDOWN)
+        self.valueTextCtrl = wx.TextCtrl(self, value="", pos=(92, 30), size=(50, 25))
 
 
 class ATestPanel2(wx.Panel):
@@ -91,4 +94,3 @@ class ATestPanel3(wx.Panel):
 app = wx.App(False)
 frame = RebuildFrame(None, title=u'学生数据库管理系统')
 app.MainLoop()
-
