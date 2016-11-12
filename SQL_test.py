@@ -82,7 +82,12 @@ class MySQLTest:
     def close_db(self):
         self.db.close()
 
-
+    def select_info(self, tablename, item, symbol, values, flag):
+        if flag == 333:
+            sql = 'select * from %s WHERE %s %s \"%s\"' % (tablename, item, symbol, values)
+        else:
+            sql = 'select * from %s WHERE %s %s %s' % (tablename, item, symbol, values)
+        return sql
 # tt = MySQLTest()
 # tt.drop_table("justAqTest")
 # tt.create_table("justAqTest")

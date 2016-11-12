@@ -160,9 +160,16 @@ class BaseInfoOfStudentPanel(wx.Panel):
             return stu_infos
 
     def query_info(self, event):
+        self.testgrid.Destroy()
         word = self.select_items.GetSelection()
         select_item_value = self.select_items.GetItems()[word]
         value = self.valueTextCtrl.GetRange(0, 50)
+        if select_item_value == u"ƒÍ¡‰":
+            sqlsta = self.sqlstament.select_info(self.table_name, select_item_value, '=', value, 666)
+        else:
+            sqlsta = self.sqlstament.select_info(self.table_name, select_item_value, '=', value, 333)
+        print sqlsta
+        self.test_grid(sqlsta)
         # print select_item_value + "   " + value
 
     def updata_info(self, event):
