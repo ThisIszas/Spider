@@ -3,7 +3,6 @@
 import MySQLdb
 
 
-
 class MySQLTest:
     def __init__(self):
         self.db = MySQLdb.Connection('localhost', 'root', '123456.qaz', 'TESTDB', charset='utf8')
@@ -29,29 +28,30 @@ class MySQLTest:
          AGE INT,  \
          SEX CHAR(1),\
          INCOME FLOAT )' % table_name
-
-        self.execute_statement(sql)
+        return sql
+        # self.execute_statement(sql)
 
     def drop_table(self, table_name):
         sql = " DROP TABLE IF EXISTS %s" % table_name
-        self.execute_statement(sql)
+        return sql
+        # self.execute_statement(sql)
 
-    def insert_info(self, fname, lname, age, sex, income, table_name):
-        sql_1 = "INSERT INTO %s(FIRST_NAME,\
-                 LAST_NAME, AGE, SEX, INCOME)\
-                 VALUES ('%s', '%s', '%d', '%c', '%d' )" % (table_name, fname, lname, age, sex, income)
+    def insert_info(self, stunum, stuname, stuadress, stusex, stuage, stusituation, table_name):
+        sql_1 = "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (table_name, stunum, stuname,
+                                                                                stuadress, stusex, stuage, stusituation)
         # self.execute_statement(sql_1)
         return sql_1
 
     def delete_info(self, table_name, fields_name, symbol, temp_value):
         sql = "DELETE FROM %s WHERE %s %c \"%s\"" % (table_name, fields_name, symbol, temp_value)
-        self.execute_statement(sql)
+        # self.execute_statement(sql)
         return sql
 
     def alter_info(self, table_name, fields_name_1, temp_value, fields_name_2, temp_value_2):
         sql = "UPDATE %s SET %s = %s WHERE %s = %s" % (table_name, fields_name_1, temp_value,
                                                        fields_name_2, temp_value_2)
-        self.cursor.execute(sql)
+        return sql
+        # self.cursor.execute(sql)
 
     def execute_statement(self, sql):
         try:
@@ -63,6 +63,8 @@ class MySQLTest:
 
     def show_data(self, table_name):
         sql = "select * from %s where income > '%d'" % (table_name, 1000)
+        return sql
+        """
         try:
             self.execute_statement(sql)
             results = self.cursor.fetchall()
@@ -76,15 +78,15 @@ class MySQLTest:
         except Exception as e:
             print e
             print "Error : unable to fetch data"
-
+        """
     def close_db(self):
         self.db.close()
 
 
-tt = MySQLTest()
+# tt = MySQLTest()
 # tt.drop_table("justAqTest")
 # tt.create_table("justAqTest")
 # tt.insert_info('zas', 'Zheng', 18, 'M', 100000, 'justAqTest')
 # tt.show_data("justAqTest")
 # tt.close_db()
-tt.delete_info(u"学生基本信息", u'学号', '=', '25180')
+# tt.delete_info(u"学生基本信息", u'学号', '=', '25180')

@@ -18,6 +18,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
     def __init__(self, *args, **kwargs):
         super(RebuildFrame, self).__init__(*args, **kwargs)
         self.CreateStatusBar()
+        self.show_elements = False
 
         filemenu = wx.Menu()
         filemenu.Append(wx.ID_ABOUT, "&About", " Information about this program.")
@@ -59,19 +60,23 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
             control.SetDimensions(x=x, y=y, width=width, height=height)
 
     def confisrm_button(self, event):
-        self.login_name_Label.Show(False)
-        self.confirm_button.Show(False)
-        self.username_label.Show(False)
-        self.password.Show(False)
+        self.show_elements = False
+        self.show_element(self.show_elements)
         self.notebook.Show(True)
-        self.nameTextCtrl.Show(False)
-        self.passwordTextCtrl.Show(False)
         form1 = BaseInfoOfStudentPanel(self.notebook)
         form2 = GradesOfStudent(self.notebook)
         form3 = ATestPanel3(self.notebook)
         self.notebook.AddPage(form1, u"基本信息")
         self.notebook.AddPage(form2, "test1")
         self.notebook.AddPage(form3, "test2")
+
+    def show_element(self, show_elements):
+        self.login_name_Label.Show(show_elements)
+        self.confirm_button.Show(show_elements)
+        self.username_label.Show(show_elements)
+        self.password.Show(show_elements)
+        self.nameTextCtrl.Show(show_elements)
+        self.passwordTextCtrl.Show(show_elements)
 
 
 class BaseInfoOfStudentPanel(wx.Panel):
@@ -124,14 +129,10 @@ class BaseInfoOfStudentPanel(wx.Panel):
         if entry_dlg.ShowModal() == wx.ID_OK:
             stunum = entry_dlg.GetValue()
         entry_dlg.Destroy()
-        # print stunum
         if stunum:
             splited_stunum = stunum.split(' ')  # 因为用户输入的学号可能带空格,所以先把字符按空格拆分,再进行连接.(分割后为一个数组)
         # 同理添加数据时也按空格进行分割.
             joined_stunum = ''.join(splited_stunum)  # 对已分割后的字符串拼接
-            # print joined_stunum
-            # for i in range(len(splited_stunum)):
-            #     print str(i) + ": " + splited_stunum[i]
             stunum = joined_stunum
         sqlsta = self.sqlstament.delete_info(self.table_name, u'学号', '=', stunum)
         print sqlsta
@@ -145,9 +146,16 @@ class BaseInfoOfStudentPanel(wx.Panel):
         entry_dlg.Destroy()
         if stu_infos:
             splited_stu_info = stu_infos.split(' ')
-            # for e in splited_stu_info:
-            #     print e
-            return splited_stu_info
+            stunum = splited_stu_info[0]
+            stuname = splited_stu_info[1]
+            stu_adress = splited_stu_info[2]
+            stusex = splited_stu_info[3]
+            stuage = splited_stu_info[4]
+            stusituation = splited_stu_info[5]
+            sqlsta = self.sqlstament.insert_info(stunum, stuname, stu_adress, stusex, stuage, stusituation,
+                                                 self.table_name)
+            print sqlsta
+            self.sqlstament.execute_statement(sqlsta)
         else:
             return stu_infos
 
