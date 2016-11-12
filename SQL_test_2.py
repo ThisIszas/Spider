@@ -3,15 +3,10 @@
 import MySQLdb
 
 
-
 class MySQLTest:
     def __init__(self):
-        self.db = MySQLdb.Connection('localhost', 'root', '123456.qaz', 'TESTDB', charset='utf8')
-        # self.db.set_character_set('utf-8')
+        self.db = MySQLdb.Connection('localhost', 'root', '123456.qaz', 'TESTDB')
         self.cursor = self.db.cursor()
-        # self.cursor.execute('SET NAMES utf8;')
-        # self.cursor.execute('SET CHARACTER SET utf8;')
-        # self.cursor.execute('SET character_set_connection=utf8;')
         self.fname = "hehe"
         self.lname = "hehe"
         self.age = 0
@@ -40,13 +35,11 @@ class MySQLTest:
         sql_1 = "INSERT INTO %s(FIRST_NAME,\
                  LAST_NAME, AGE, SEX, INCOME)\
                  VALUES ('%s', '%s', '%d', '%c', '%d' )" % (table_name, fname, lname, age, sex, income)
-        # self.execute_statement(sql_1)
-        return sql_1
+        self.execute_statement(sql_1)
 
     def delete_info(self, table_name, fields_name, symbol, temp_value):
-        sql = "DELETE FROM %s WHERE %s %c \"%s\"" % (table_name, fields_name, symbol, temp_value)
+        sql = "DELETE FROM %s WHERE %s %c %s" % (table_name, fields_name, symbol, temp_value)
         self.execute_statement(sql)
-        return sql
 
     def alter_info(self, table_name, fields_name_1, temp_value, fields_name_2, temp_value_2):
         sql = "UPDATE %s SET %s = %s WHERE %s = %s" % (table_name, fields_name_1, temp_value,
@@ -82,9 +75,8 @@ class MySQLTest:
 
 
 tt = MySQLTest()
-# tt.drop_table("justAqTest")
-# tt.create_table("justAqTest")
-# tt.insert_info('zas', 'Zheng', 18, 'M', 100000, 'justAqTest')
-# tt.show_data("justAqTest")
-# tt.close_db()
-tt.delete_info(u"学生基本信息", u'学号', '=', '25180')
+tt.drop_table("justAqTest")
+tt.create_table("justAqTest")
+tt.insert_info('zas', 'Zheng', 18, 'M', 100000, 'justAqTest')
+tt.show_data("justAqTest")
+tt.close_db()

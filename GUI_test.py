@@ -11,6 +11,7 @@
 import wx
 import wx.grid
 import GenericTable
+from SQL_test import MySQLTest
 
 
 class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
@@ -75,6 +76,8 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
 
 class BaseInfoOfStudentPanel(wx.Panel):
     def __init__(self, *args, **kwargs):
+        self.sqlstament = MySQLTest()
+        self.table_name = u'学生基本信息'
         super(BaseInfoOfStudentPanel, self).__init__(*args, **kwargs)
         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
 
@@ -87,10 +90,12 @@ class BaseInfoOfStudentPanel(wx.Panel):
         self.SelectButton = wx.Button(self, label=u'查询', pos=(144, 30), size=(33, 25))
         self.AddButton = wx.Button(self, label=u'添加一行', pos=(700, 8), size=(60, 25))
         self.DropButton = wx.Button(self, label=u'删除一行', pos=(700, 35), size=(60, 25))
-        self.UpdateButton = wx.Button(self, label=u'修改\n数据', pos=(764, 15), size=(35, 35))
+        self.UpdateButton = wx.Button(self, label=u'修改\n数据', pos=(764, 25), size=(35, 45))
+        self.RefreshButton = wx.Button(self, label=u'刷新', pos=(700, 62), size=(60, 25))
         self.SelectButton.Bind(wx.EVT_BUTTON, self.query_info)
         self.DropButton.Bind(wx.EVT_BUTTON, self.delete_info)
         self.AddButton.Bind(wx.EVT_BUTTON, self.add_info)
+        self.RefreshButton.Bind(wx.EVT_BUTTON, self.refresh)
 
         select_item_list = [u'*', u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
         self.select_items = wx.ComboBox(self, pos=(10, 30), size=(80, -1), choices=select_item_list,
@@ -102,14 +107,16 @@ class BaseInfoOfStudentPanel(wx.Panel):
         import SqlUtil
         data = SqlUtil.query_data(sqlsta)
         col_label = ("学号", "姓名", "家庭地址", "性别", "年龄", "基本情况")
-        # size=(880, 300)
-        testgrid = wx.grid.Grid(self, size=wx.SIZE_AUTO, pos=(10, 60))
+        self.testgrid = wx.grid.Grid(self, size=(880, 300), pos=(10, 60))
         row_label = []
-        print data
         for i in range(len(data)):
             row_label.append(i+1)
-        testgrid.baseModel = GenericTable.GenericTable(data, row_label, col_label)
-        testgrid.SetTable(testgrid.baseModel)
+        self.testgrid.baseModel = GenericTable.GenericTable(data, row_label, col_label)
+        self.testgrid.SetTable(self.testgrid.baseModel)
+
+    def refresh(self, event):
+        self.testgrid.Destroy()
+        self.test_grid('select * from 学生基本信息')
 
     def delete_info(self, event):
         stunum = "00000000"
@@ -126,7 +133,9 @@ class BaseInfoOfStudentPanel(wx.Panel):
             # for i in range(len(splited_stunum)):
             #     print str(i) + ": " + splited_stunum[i]
             stunum = joined_stunum
-        return stunum
+        sqlsta = self.sqlstament.delete_info(self.table_name, u'学号', '=', stunum)
+        print sqlsta
+        self.sqlstament.execute_statement(sqlsta)
 
     def add_info(self, event):
         stu_infos = ""
@@ -148,7 +157,15 @@ class BaseInfoOfStudentPanel(wx.Panel):
         value = self.valueTextCtrl.GetRange(0, 50)
         # print select_item_value + "   " + value
 
-   # def updata_info(self, event):
+    def updata_info(self, event):
+        content = ""
+        entry_dlg = wx.TextEntryDialog(self, u'先输入要修改的列名和值,再输入学号', u'输入一组信息')
+        if entry_dlg.ShowModal() == wx.ID_OK:
+            content = entry_dlg.GetValue()
+        entry_dlg.Destroy()
+        if content:
+            splited_content = content.split(" ")
+        return content
 
 
 class GradesOfStudent(wx.Panel):
