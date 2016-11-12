@@ -8,14 +8,14 @@ databaseStr = 'testdb'
 charsetStr = 'gbk'
 
 
-def getConn():
-    return  MySQLdb.connect(host=dbHost, user=userName, passwd=pwd, db=databaseStr,
-                            charset=charsetStr)
+def get_conn():
+    return MySQLdb.connect(host=dbHost, user=userName, passwd=pwd, db=databaseStr,
+                           charset=charsetStr)
 
 
-def queryData(sql):
+def query_data(sql):
     try:
-        conn = getConn()
+        conn = get_conn()
         cursor = conn.cursor()
         cursor.execute(sql)
 #        print cursor.fetchall()
@@ -32,7 +32,7 @@ def queryData(sql):
 
 def createOrInitTable(sql):
     try:
-        conn = getConn()
+        conn = get_conn()
         cursor = conn.cursor()
         n = cursor.execute(sql)
         print 'Execute SQL return ', n
@@ -43,5 +43,5 @@ def createOrInitTable(sql):
         conn.close()
 
 if __name__ == '__main__':
-    data = queryData('select * from 学生基本信息')
+    data = query_data('select * from 学生基本信息')
     print data
