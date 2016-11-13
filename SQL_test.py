@@ -47,9 +47,13 @@ class MySQLTest:
         # self.execute_statement(sql)
         return sql
 
-    def alter_info(self, table_name, fields_name_1, temp_value, fields_name_2, temp_value_2):
-        sql = "UPDATE %s SET %s = %s WHERE %s = %s" % (table_name, fields_name_1, temp_value,
-                                                       fields_name_2, temp_value_2)
+    def alter_info(self, table_name, fields_name_1, temp_value, fields_name_2, temp_value_2, flag):
+        if flag == 666:
+            sql = "UPDATE %s SET %s = %s WHERE %s = \"%s\"" % (table_name, fields_name_1, temp_value,
+                                                               fields_name_2, temp_value_2)
+        else:
+            sql = "UPDATE %s SET %s = \"%s\" WHERE %s = \"%s\"" % (table_name, fields_name_1, temp_value,
+                                                                   fields_name_2, temp_value_2)
         return sql
         # self.cursor.execute(sql)
 

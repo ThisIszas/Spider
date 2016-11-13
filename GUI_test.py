@@ -83,8 +83,14 @@ class BaseInfoOfStudentPanel(wx.Panel):
     def __init__(self, *args, **kwargs):
         self.sqlstament = MySQLTest()
         self.table_name = u'学生基本信息'
+        self.select_item_list = [u'*', u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
         super(BaseInfoOfStudentPanel, self).__init__(*args, **kwargs)
         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
+        self.gbsizer = wx.GridBagSizer(hgap=10, vgap=10)
+        self.second_panel = wx.Panel(self, size=(238, 270), pos=(600, 100),
+                                     style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
+
+
 
         self.title_label = wx.StaticText(self, label=u"学生基本信息管理", pos=(308, 10))
         select_item_label = wx.StaticText(self, label=u"查询项:", pos=(10, 10))
@@ -101,12 +107,14 @@ class BaseInfoOfStudentPanel(wx.Panel):
         self.DropButton.Bind(wx.EVT_BUTTON, self.delete_info)
         self.AddButton.Bind(wx.EVT_BUTTON, self.add_info)
         self.RefreshButton.Bind(wx.EVT_BUTTON, self.refresh)
+        self.UpdateButton.Bind(wx.EVT_BUTTON, self.updata_info)
 
-        select_item_list = [u'*', u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
-        self.select_items = wx.ComboBox(self, pos=(10, 30), size=(80, -1), choices=select_item_list,
+
+        self.select_items = wx.ComboBox(self, pos=(10, 30), size=(80, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
         self.valueTextCtrl = wx.TextCtrl(self, value="", pos=(92, 30), size=(50, 25))
         self.test_grid('select * from 学生基本信息')
+
 
     def test_grid(self, sqlsta):
         import SqlUtil
@@ -170,19 +178,39 @@ class BaseInfoOfStudentPanel(wx.Panel):
             sqlsta = self.sqlstament.select_info(self.table_name, select_item_value, '=', value, 333)
         print sqlsta
         self.test_grid(sqlsta)
-        # print select_item_value + "   " + value
 
     def updata_info(self, event):
-        content = ""
-        entry_dlg = wx.TextEntryDialog(self, u'先输入要修改的列名和值,再输入学号', u'输入一组信息')
-        if entry_dlg.ShowModal() == wx.ID_OK:
-            content = entry_dlg.GetValue()
-        entry_dlg.Destroy()
-        if content:
-            splited_content = content.split(" ")
-        return content
+        print "Fasdf"
 
+        self.stunum_temp_label = wx.StaticText(self.second_panel, label=u"修改对象学号:", pos=(0, 5))
+        self.stunumvalues_temp = wx.TextCtrl(self.second_panel, size=(80, 25), pos=(82, 0))
+        self.column_name_temp = wx.StaticText(self.second_panel, label=u"要修改的列名:", pos=(0, 30))
+        self.select_items_temp = wx.ComboBox(self.second_panel, size=(80, 25), pos=(0, 50),
+                                        choices=self.select_item_list, style=wx.CB_DROPDOWN)
+        self.change_value = wx.StaticText(self.second_panel, label=u'  修改后的值:', pos=(82, 30))
+        self.values_temp = wx.TextCtrl(self.second_panel, size=(80, 25), pos=(85, 50))
+        self.ok_button = wx.Button(self.second_panel, label=u"确定修改", pos=(40, 80))
+        self.ok_button.Bind(wx.EVT_BUTTON, self.unshow_second_panel)
+        self.second_panel.Show(True)
 
+    def unshow_second_panel(self, event):
+        stunum = self.stunumvalues_temp.GetRange(0, 10)
+        word = self.select_items_temp.GetSelection()
+        colname = self.select_items_temp.GetItems()[word]
+        colvalue = self.values_temp.GetRange(0, 30)
+        if colname == u'年龄':
+            sql = self.sqlstament.alter_info(self.table_name, colname, colvalue, u'学号', stunum, 666)
+        else:
+            sql = self.sqlstament.alter_info(self.table_name, colname, colvalue, u'学号', stunum, 333)
+        print sql
+        self.stunumvalues_temp.Show(False)
+        self.select_items_temp.Show(False)
+        self.values_temp.Show(False)
+        self.stunum_temp_label.Show(False)
+        self.column_name_temp.Show(False)
+        self.change_value.Show(False)
+        self.ok_button.Show(False)
+        self.sqlstament.execute_statement(sql)
 class GradesOfStudent(wx.Panel):
     def __init__(self, *args, **kwargs):
         super(GradesOfStudent, self).__init__(*args, **kwargs)
