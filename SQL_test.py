@@ -42,6 +42,26 @@ class MySQLTest:
         # self.execute_statement(sql_1)
         return sql_1
 
+    def insert_info_2(self, table_name, splited_stu_info):
+        stunum = splited_stu_info[0]
+        stuname = splited_stu_info[1]
+        sql_grade = splited_stu_info[2]
+        composition_principle_grade = splited_stu_info[3]
+        operate_system_grade = splited_stu_info[4]
+        data_structure_grade = splited_stu_info[5]
+        algorithm_grade = splited_stu_info[6]
+        computer_networks_grade = splited_stu_info[7]
+        higher_mathematics_grade = splited_stu_info[8]
+        total_grade = splited_stu_info[9]
+        average_grade = splited_stu_info[10]
+        teacher = splited_stu_info[11]
+        sql_1 = "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'," \
+                " '%s')" % (table_name, stunum, stuname, sql_grade, composition_principle_grade,
+                            operate_system_grade, data_structure_grade, algorithm_grade, computer_networks_grade,
+                            higher_mathematics_grade, total_grade, average_grade, teacher)
+        # self.execute_statement(sql_1)
+        return sql_1
+
     def delete_info(self, table_name, fields_name, symbol, temp_value):
         sql = "DELETE FROM %s WHERE %s %c \"%s\"" % (table_name, fields_name, symbol, temp_value)
         # self.execute_statement(sql)
