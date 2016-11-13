@@ -63,7 +63,7 @@ class MySQLTest:
         return sql_1
 
     def delete_info(self, table_name, fields_name, symbol, temp_value):
-        sql = "DELETE FROM %s WHERE %s %c \"%s\"" % (table_name, fields_name, symbol, temp_value)
+        sql = "DELETE FROM %s WHERE %s %s \"%s\"" % (table_name, fields_name, symbol, temp_value)
         # self.execute_statement(sql)
         return sql
 
@@ -75,18 +75,21 @@ class MySQLTest:
             sql = "UPDATE %s SET %s = \"%s\" WHERE %s = \"%s\"" % (table_name, fields_name_1, temp_value,
                                                                    fields_name_2, temp_value_2)
         return sql
-        # self.cursor.execute(sql)
 
     def execute_statement(self, sql):
         try:
-            self.cursor.execute(sql)
+            cursor = self.db.cursor()
+            # temp = self.cursor.execute(sql)
+            # self.db.commit()
+            cursor.execute(sql)
             self.db.commit()
+            return cursor.fetchall()
         except Exception as e:
             print e
             self.db.rollback()
 
-    def show_data(self, table_name):
-        sql = "select * from %s where income > '%d'" % (table_name, 1000)
+    def show_data(self, table_name, colname, values, symbol='='):
+        sql = "select * from %s where %s %s '%s'" % (table_name, colname, symbol, values)
         return sql
         """
         try:
@@ -112,10 +115,29 @@ class MySQLTest:
         else:
             sql = 'select * from %s WHERE %s %s %s' % (tablename, item, symbol, values)
         return sql
-# tt = MySQLTest()
+
+    def register(self, username, password):
+        sql = "insert into unandpassword VALUES (\"%s\",\"%s\")" %(username, password)
+        ww = self.execute_statement(sql)
+        # print type(ww)
+        # if ww is None:
+        #     print 'helloworld'
+        return ww
+tt = MySQLTest()
 # tt.drop_table("justAqTest")
 # tt.create_table("justAqTest")
 # tt.insert_info('zas', 'Zheng', 18, 'M', 100000, 'justAqTest')
 # tt.show_data("justAqTest")
 # tt.close_db()
 # tt.delete_info(u"学生基本信息", u'学号', '=', '25180')
+# sql = tt.show_data('unandpassword', 'username', '2014021073')
+# print sql
+# ss = tt.execute_statement(sql)
+# for e in ss:
+#     print e[1]
+# ww = tt.register('2014021065', '021065')
+# ee = tt.execute_statement(ww)
+# if ee:
+#     print 0
+# else:
+#     print 2

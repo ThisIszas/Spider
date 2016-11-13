@@ -20,7 +20,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         super(RebuildFrame, self).__init__(*args, **kwargs)
         self.CreateStatusBar()
         self.show_elements = False
-
+        self.sqlexecute = MySQLTest()
         filemenu = wx.Menu()
         filemenu.Append(wx.ID_ABOUT, "&About", " Information about this program.")
         filemenu.AppendSeparator()
@@ -39,11 +39,16 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
 
         self.login_name_Label = wx.StaticText(self.login_panel, label=u"学生成绩管理系统")
         self.confirm_button = wx.Button(self.login_panel, label=u"登录")
+        self.register_button = wx.Button(self.login_panel, label=u'注册', pos=(407, 210), size=(73, -1))
         self.username_label = wx.StaticText(self.login_panel, label=u"用户名")
         self.password = wx.StaticText(self.login_panel, label=u"密码")
         self.nameTextCtrl = wx.TextCtrl(self.login_panel, value="")
         self.passwordTextCtrl = wx.TextCtrl(self.login_panel, value=u"", style=wx.TE_PASSWORD)
         self.Bind(wx.EVT_BUTTON, self.confisrm_button, self.confirm_button)
+        self.register_button.Bind(wx.EVT_BUTTON, self.register_button_hide)
+        self.reconfirm_button = wx.Button(self.login_panel, label=u"确定", pos=(360, 210))
+        self.reconfirm_button.Bind(wx.EVT_BUTTON, self.register_buttons)
+        self.reconfirm_button.Show(False)
 
         self.do_layout()
         self.SetClientSize((830, 400))  # (宽, 高)
@@ -56,11 +61,41 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
                  (self.nameTextCtrl, 330, 148, 150, 25),
                  (self.password, 295, 183, -1, -1),
                  (self.passwordTextCtrl, 330, 178, 150, 25),
-                 (self.confirm_button, 350, 210, -1, -1)
+                 (self.confirm_button, 330, 210, 73, -1)
                  ]:
             control.SetDimensions(x=x, y=y, width=width, height=height)
 
+    def register_button_hide(self, event):
+        self.reconfirm_button.Show(True)
+        self.login_name_Label.Show(False)
+        self.confirm_button.Show(False)
+        self.register_button.Show(False)
+
+    def register_buttons(self, event):
+        username = self.nameTextCtrl.GetRange(0, 16)
+        password = self.passwordTextCtrl.GetRange(0, 20)
+        rights = self.sqlexecute.register(username, password)
+        if rights is None:
+            wx.MessageBox(u'用户名已存在', 'Warning', wx.OK | wx.ICON_INFORMATION)
+            return 0
+        self.reconfirm_button.Show(False)
+        self.login_name_Label.Show(True)
+        self.confirm_button.Show(True)
+        self.register_button.Show(True)
+
     def confisrm_button(self, event):
+        username = self.nameTextCtrl.GetRange(0, 16)
+        password = self.passwordTextCtrl.GetRange(0, 20)
+        temp = self.sqlexecute.show_data('unandpassword', 'username', username)
+        temp_2 = self.sqlexecute.execute_statement(temp)
+        if temp_2:
+            temp_2 = temp_2[0]
+            if password != temp_2[1]:
+                wx.MessageBox(u'用户名或密码错误', 'Warning', wx.OK | wx.ICON_INFORMATION)
+                return 0
+        else:
+            wx.MessageBox(u'用户名或密码错误', 'Warning', wx.OK | wx.ICON_INFORMATION)
+            return 0
         base_info_of_student_panel = PanelsFile.BaseInfoOfStudentPanel
         grades_of_student = PanelsFile.GradesOfStudent
         self.show_elements = False
@@ -80,18 +115,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.password.Show(show_elements)
         self.nameTextCtrl.Show(show_elements)
         self.passwordTextCtrl.Show(show_elements)
-
-
-# class GradesOfStudent(wx.Panel):
-#     def __init__(self, *args, **kwargs):
-#         super(GradesOfStudent, self).__init__(*args, **kwargs)
-#         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
-#
-#         self.title_label = wx.StaticText(self, label=u"学生成绩管理", pos=(308, 10))
-#         self.title_label.SetFont(title_font)
-#         self.title_label.SetForegroundColour("#21c4c3")
-#         self.warning_label = wx.StaticText(self, label=u'注:此表只能管理学号已存在学生的信息.', pos=(283, 35))
-#         self.warning_label.SetForegroundColour('red')
+        self.register_button.Show(show_elements)
 
 
 class ATestPanel3(wx.Panel):

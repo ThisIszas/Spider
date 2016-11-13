@@ -17,8 +17,8 @@ class BaseInfoOfStudentPanel(wx.Panel):
                                      style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
 
         self.title_label = wx.StaticText(self, label=u"学生基本信息管理", pos=(308, 10))
-        select_item_label = wx.StaticText(self, label=u"查询项:", pos=(10, 10))
-        value_label = wx.StaticText(self, label=u"值:", pos=(96, 10))
+        wx.StaticText(self, label=u"查询项:", pos=(10, 10))
+        wx.StaticText(self, label=u"值:", pos=(96, 10))
         self.title_label.SetFont(title_font)
         self.title_label.SetForegroundColour("#21c4c3")  # 设置字体颜色
 
@@ -32,7 +32,6 @@ class BaseInfoOfStudentPanel(wx.Panel):
         self.AddButton.Bind(wx.EVT_BUTTON, self.add_info)
         self.RefreshButton.Bind(wx.EVT_BUTTON, self.refresh)
         self.UpdateButton.Bind(wx.EVT_BUTTON, self.updata_info)
-
 
         self.select_items = wx.ComboBox(self, pos=(10, 30), size=(80, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
@@ -111,8 +110,10 @@ class BaseInfoOfStudentPanel(wx.Panel):
                                         choices=self.select_item_list2, style=wx.CB_DROPDOWN)
         self.change_value = wx.StaticText(self.second_panel, label=u'  修改后的值:', pos=(82, 30))
         self.values_temp = wx.TextCtrl(self.second_panel, size=(80, 25), pos=(85, 50))
-        self.ok_button = wx.Button(self.second_panel, label=u"确定修改", pos=(40, 80))
+        self.ok_button = wx.Button(self.second_panel, label=u"确定修改", pos=(0, 80), size=(80, 25))
         self.ok_button.Bind(wx.EVT_BUTTON, self.unshow_second_panel)
+        self.cancel_button = wx.Button(self.second_panel, label=u"返回", pos=(85, 80), size=(80, 25))
+        self.cancel_button.Bind(wx.EVT_BUTTON, self.unshow_second_panel_ele)
         self.second_panel.Show(True)
 
     def unshow_second_panel(self, event):
@@ -131,16 +132,28 @@ class BaseInfoOfStudentPanel(wx.Panel):
         self.column_name_temp.Show(False)
         self.change_value.Show(False)
         self.ok_button.Show(False)
+        self.cancel_button.Show(False)
         self.sqlstament.execute_statement(sql)
         print sql
+
+    def unshow_second_panel_ele(self, event):
+        self.stunumvalues_temp.Show(False)
+        self.select_items_temp.Show(False)
+        self.values_temp.Show(False)
+        self.stunum_temp_label.Show(False)
+        self.column_name_temp.Show(False)
+        self.change_value.Show(False)
+        self.ok_button.Show(False)
+        self.cancel_button.Show(False)
 
 
 class GradesOfStudent(wx.Panel):
     def __init__(self, *args, **kwargs):
         self.table_name = u'学生成绩信息'
         super(GradesOfStudent, self).__init__(*args, **kwargs)
-        title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
-
+        title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体   600,100
+        self.second_panel = wx.Panel(self, size=(238, 270), pos=(300, 100),
+                                     style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
         self.select_item_list = [u'*', u'学号', u'姓名', u'数据库', u'组成原理', u'操作系统', u'数据结构',
                                  u'算法', u'计算机网络', u'高数', u'总成绩', u'平均成绩', u'任课教师']
         self.sqlstament = MySQLTest()
@@ -150,19 +163,19 @@ class GradesOfStudent(wx.Panel):
         self.warning_label = wx.StaticText(self, label=u'注:此表只能管理学号已存在学生的信息.', pos=(283, 35))
         self.warning_label.SetForegroundColour('red')
 
-        select_item_label = wx.StaticText(self, label=u"查询项:", pos=(10, 10))
-        value_label = wx.StaticText(self, label=u"值:", pos=(96, 10))
+        wx.StaticText(self, label=u"查询项:", pos=(10, 10))
+        wx.StaticText(self, label=u"值:", pos=(96, 10))
 
         self.SelectButton = wx.Button(self, label=u'查询', pos=(144, 30), size=(33, 25))
         self.AddButton = wx.Button(self, label=u'添加一行', pos=(680, 8), size=(60, 25))
         self.DropButton = wx.Button(self, label=u'删除一行', pos=(680, 35), size=(60, 25))
         self.UpdateButton = wx.Button(self, label=u'修改数据', pos=(740, 8), size=(60, 25))
         self.RefreshButton = wx.Button(self, label=u'刷新', pos=(740, 35), size=(60, 25))
-        # self.SelectButton.Bind(wx.EVT_BUTTON, self.query_info)
-        # self.DropButton.Bind(wx.EVT_BUTTON, self.delete_info)
+        self.SelectButton.Bind(wx.EVT_BUTTON, self.query_info)
+        self.DropButton.Bind(wx.EVT_BUTTON, self.delete_info)
         self.AddButton.Bind(wx.EVT_BUTTON, self.add_info)
         self.RefreshButton.Bind(wx.EVT_BUTTON, self.refresh)
-        # self.UpdateButton.Bind(wx.EVT_BUTTON, self.updata_info)
+        self.UpdateButton.Bind(wx.EVT_BUTTON, self.updata_info)
         self.select_items = wx.ComboBox(self, pos=(10, 30), size=(80, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
         self.valueTextCtrl = wx.TextCtrl(self, value="", pos=(92, 30), size=(50, 25))
@@ -172,7 +185,7 @@ class GradesOfStudent(wx.Panel):
         import SqlUtil
         data = SqlUtil.query_data(sqlsta)
         col_label = (u'学号', u'姓名', u'数据库', u'组成原理', u'操作系统', u'数据结构',
-                                 u'算法', u'计算机网络', u'高数', u'总成绩', u'平均成绩', u'任课教师')
+                     u'算法', u'计算机网络', u'高数', u'总成绩', u'平均成绩', u'任课教师')
         self.testgrid = wx.grid.Grid(self, size=(800, 300), pos=(10, 60))
         row_label = []
         if len(data):
@@ -184,7 +197,10 @@ class GradesOfStudent(wx.Panel):
             wx.MessageBox('成绩表表中无信息,请插入信息', 'Warning!', wx.OK | wx.ICON_INFORMATION)
 
     def refresh(self, event):
-        self.testgrid.Destroy()
+        try:
+            self.testgrid.Destroy()
+        except:
+            pass
         self.test_grid('select * from 学生成绩信息')
 
     def delete_info(self, event):
@@ -227,7 +243,13 @@ class GradesOfStudent(wx.Panel):
         self.test_grid(sqlsta)
 
     def updata_info(self, event):
-        self.select_item_list2 = [u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
+        try:
+            self.testgrid.Destroy()
+        except Exception as e:
+            print e
+            pass
+        self.select_item_list2 = [u'数据库', u'组成原理', u'操作系统', u'数据结构',
+                                  u'算法', u'计算机网络', u'高数', u'总成绩', u'平均成绩', u'任课教师']
         self.stunum_temp_label = wx.StaticText(self.second_panel, label=u"修改对象学号:", pos=(0, 5))
         self.stunumvalues_temp = wx.TextCtrl(self.second_panel, size=(80, 25), pos=(82, 0))
         self.column_name_temp = wx.StaticText(self.second_panel, label=u"要修改的列名:", pos=(0, 30))
@@ -235,8 +257,10 @@ class GradesOfStudent(wx.Panel):
                                         choices=self.select_item_list2, style=wx.CB_DROPDOWN)
         self.change_value = wx.StaticText(self.second_panel, label=u'  修改后的值:', pos=(82, 30))
         self.values_temp = wx.TextCtrl(self.second_panel, size=(80, 25), pos=(85, 50))
-        self.ok_button = wx.Button(self.second_panel, label=u"确定修改", pos=(40, 80))
+        self.ok_button = wx.Button(self.second_panel, label=u"确定修改", pos=(0, 80), size=(80, 25))
+        self.cancel_button = wx.Button(self.second_panel, label=u"返回", pos=(85, 80), size=(80, 25))
         self.ok_button.Bind(wx.EVT_BUTTON, self.unshow_second_panel)
+        self.cancel_button.Bind(wx.EVT_BUTTON, self.unshow_second_panel_ele)
         self.second_panel.Show(True)
 
     def unshow_second_panel(self, event):
@@ -255,5 +279,18 @@ class GradesOfStudent(wx.Panel):
         self.column_name_temp.Show(False)
         self.change_value.Show(False)
         self.ok_button.Show(False)
+        self.cancel_button.Show(False)
         self.sqlstament.execute_statement(sql)
         print sql
+        self.test_grid('select * from 学生成绩信息')
+
+    def unshow_second_panel_ele(self, event):
+        self.stunumvalues_temp.Show(False)
+        self.select_items_temp.Show(False)
+        self.values_temp.Show(False)
+        self.stunum_temp_label.Show(False)
+        self.column_name_temp.Show(False)
+        self.change_value.Show(False)
+        self.ok_button.Show(False)
+        self.cancel_button.Show(False)
+        self.test_grid('select * from 学生成绩信息')

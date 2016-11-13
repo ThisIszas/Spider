@@ -43,5 +43,6 @@ def createOrInitTable(sql):
         conn.close()
 
 if __name__ == '__main__':
-    data = query_data('select * from 学生基本信息')
-    print data
+    data = query_data(u'select * from 学生基本信息')
+    for e in data:
+        print e
