@@ -74,6 +74,9 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
     def register_buttons(self, event):
         username = self.nameTextCtrl.GetRange(0, 16)
         password = self.passwordTextCtrl.GetRange(0, 20)
+        if len(username)==0 or len(password)==0:
+            wx.MessageBox(u'用户名或密码为空', 'Warning', wx.OK | wx.ICON_INFORMATION)
+            return 0
         rights = self.sqlexecute.register(username, password)
         if rights is None:
             wx.MessageBox(u'用户名已存在', 'Warning', wx.OK | wx.ICON_INFORMATION)

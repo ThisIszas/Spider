@@ -1,14 +1,16 @@
-# coding:utf-8
-# http://blog.csdn.net/chenghit/article/details/50421090
-# http://www.cnblogs.com/dyx1024/archive/2012/07/05/2578579.html
+# coding:gbk
 import wx
+import wx.grid
+import PanelsFile
+from SQL_test import MySQLTest
 
 
-class RebuildFrame(wx.Frame):  # ä¸»æ¡†ä½“,æ‰€æœ‰ç•Œé¢éƒ½å¾€Frameé‡ŒåŠ 
+class RebuildFrame(wx.Frame):  # Ö÷¿òÌå,ËùÓĞ½çÃæ¶¼ÍùFrameÀï¼Ó
     def __init__(self, *args, **kwargs):
         super(RebuildFrame, self).__init__(*args, **kwargs)
         self.CreateStatusBar()
-
+        self.show_elements = False
+        self.sqlexecute = MySQLTest()
         filemenu = wx.Menu()
         filemenu.Append(wx.ID_ABOUT, "&About", " Information about this program.")
         filemenu.AppendSeparator()
@@ -20,17 +22,26 @@ class RebuildFrame(wx.Frame):  # ä¸»æ¡†ä½“,æ‰€æœ‰ç•Œé¢éƒ½å¾€Frameé‡ŒåŠ 
         menu_bar.Append(filemenu, "&File")
         self.SetMenuBar(menu_bar)
 
-        self.login_panel = wx.Panel(self)
-        self.login_name_Label = wx.StaticText(self.login_panel, label=u"å­¦ç”Ÿæˆç»©ç®¡ç†ç³»ç»Ÿ")
-        self.confirm_button = wx.Button(self.login_panel, label=u"ç™»å½•")
-        self.username_label = wx.StaticText(self.login_panel, label=u"ç”¨æˆ·å")
-        self.password = wx.StaticText(self.login_panel, label=u"å¯†ç ")
+        self.login_panel = wx.Panel(self, 1)
+
+        self.notebook = wx.Notebook(self.login_panel, size=(830, 400))
+        self.notebook.Show(False)
+
+        self.login_name_Label = wx.StaticText(self.login_panel, label=u"Ñ§Éú³É¼¨¹ÜÀíÏµÍ³")
+        self.confirm_button = wx.Button(self.login_panel, label=u"µÇÂ¼")
+        self.register_button = wx.Button(self.login_panel, label=u'×¢²á', pos=(407, 210), size=(73, -1))
+        self.username_label = wx.StaticText(self.login_panel, label=u"ÓÃ»§Ãû")
+        self.password = wx.StaticText(self.login_panel, label=u"ÃÜÂë")
         self.nameTextCtrl = wx.TextCtrl(self.login_panel, value="")
         self.passwordTextCtrl = wx.TextCtrl(self.login_panel, value=u"", style=wx.TE_PASSWORD)
         self.Bind(wx.EVT_BUTTON, self.confisrm_button, self.confirm_button)
+        self.register_button.Bind(wx.EVT_BUTTON, self.register_button_hide)
+        self.reconfirm_button = wx.Button(self.login_panel, label=u"È·¶¨", pos=(360, 210))
+        self.reconfirm_button.Bind(wx.EVT_BUTTON, self.register_buttons)
+        self.reconfirm_button.Show(False)
 
         self.do_layout()
-        self.SetClientSize((830, 400))  # (å®½, é«˜)
+        self.SetClientSize((830, 400))  # (¿í, ¸ß)
         self.Show()
 
     def do_layout(self):
@@ -40,15 +51,70 @@ class RebuildFrame(wx.Frame):  # ä¸»æ¡†ä½“,æ‰€æœ‰ç•Œé¢éƒ½å¾€Frameé‡ŒåŠ 
                  (self.nameTextCtrl, 330, 148, 150, 25),
                  (self.password, 295, 183, -1, -1),
                  (self.passwordTextCtrl, 330, 178, 150, 25),
-                 (self.confirm_button, 350, 210, -1, -1)
+                 (self.confirm_button, 330, 210, 73, -1)
                  ]:
             control.SetDimensions(x=x, y=y, width=width, height=height)
 
+    def register_button_hide(self, event):
+        self.reconfirm_button.Show(True)
+        self.login_name_Label.Show(False)
+        self.confirm_button.Show(False)
+        self.register_button.Show(False)
+
+    def register_buttons(self, event):
+        username = self.nameTextCtrl.GetRange(0, 16)
+        password = self.passwordTextCtrl.GetRange(0, 20)
+        rights = self.sqlexecute.register(username, password)
+        if rights is None:
+            wx.MessageBox(u'ÓÃ»§ÃûÒÑ´æÔÚ', 'Warning', wx.OK | wx.ICON_INFORMATION)
+            return 0
+        self.reconfirm_button.Show(False)
+        self.login_name_Label.Show(True)
+        self.confirm_button.Show(True)
+        self.register_button.Show(True)
+
     def confisrm_button(self, event):
-        test = "True"
-        self.login_panel.Show(False)
-        print test
+        username = self.nameTextCtrl.GetRange(0, 16)
+        password = self.passwordTextCtrl.GetRange(0, 20)
+        temp = self.sqlexecute.show_data('unandpassword', 'username', username)
+        temp_2 = self.sqlexecute.execute_statement(temp)
+        if temp_2:
+            temp_2 = temp_2[0]
+            if password != temp_2[1]:
+                wx.MessageBox(u'ÓÃ»§Ãû»òÃÜÂë´íÎó', 'Warning', wx.OK | wx.ICON_INFORMATION)
+                return 0
+        else:
+            wx.MessageBox(u'ÓÃ»§Ãû»òÃÜÂë´íÎó', 'Warning', wx.OK | wx.ICON_INFORMATION)
+            return 0
+        base_info_of_student_panel = PanelsFile.BaseInfoOfStudentPanel
+        grades_of_student = PanelsFile.GradesOfStudent
+        self.show_elements = False
+        self.show_element(self.show_elements)
+        self.notebook.Show(True)
+        form1 = base_info_of_student_panel(self.notebook)
+        form2 = grades_of_student(self.notebook)
+        form3 = ATestPanel3(self.notebook)
+        self.notebook.AddPage(form1, u"»ù±¾ĞÅÏ¢")
+        self.notebook.AddPage(form2, u"³É¼¨ĞÅÏ¢")
+        self.notebook.AddPage(form3, "test2")
+
+    def show_element(self, show_elements):
+        self.login_name_Label.Show(show_elements)
+        self.confirm_button.Show(show_elements)
+        self.username_label.Show(show_elements)
+        self.password.Show(show_elements)
+        self.nameTextCtrl.Show(show_elements)
+        self.passwordTextCtrl.Show(show_elements)
+        self.register_button.Show(show_elements)
+
+
+class ATestPanel3(wx.Panel):
+    def __init__(self, *args, **kwargs):
+        super(ATestPanel3, self).__init__(*args, **kwargs)
+        self.login_name_label = wx.StaticText(self, label=u"ÂèµÄ.ÖÕÓÚĞ´Íê¿ò¼ÜÁË-3", pos=(120, 160))
+
 
 app = wx.App(False)
-frame = RebuildFrame(None, title=u'å­¦ç”Ÿæ•°æ®åº“ç®¡ç†ç³»ç»Ÿ')
+frame = RebuildFrame(None, title=u'Ñ§ÉúÊı¾İ¿â¹ÜÀíÏµÍ³')
+frame.Center()
 app.MainLoop()

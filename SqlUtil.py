@@ -42,7 +42,7 @@ def createOrInitTable(sql):
         cursor.close()
         conn.close()
 
-if __name__ == '__main__':
-    data = query_data(u'select * from 学生基本信息')
-    for e in data:
-        print e
+# if __name__ == '__main__':
+#     data = query_data(u'select * from 学生基本信息')
+    # for e in data:
+    #     print e

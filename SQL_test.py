@@ -29,12 +29,10 @@ class MySQLTest:
          SEX CHAR(1),\
          INCOME FLOAT )' % table_name
         return sql
-        # self.execute_statement(sql)
 
     def drop_table(self, table_name):
         sql = " DROP TABLE IF EXISTS %s" % table_name
         return sql
-        # self.execute_statement(sql)
 
     def insert_info(self, stunum, stuname, stuadress, stusex, stuage, stusituation, table_name):
         sql_1 = "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (table_name, stunum, stuname,
@@ -119,7 +117,7 @@ class MySQLTest:
     def register(self, username, password):
         sql = "insert into unandpassword VALUES (\"%s\",\"%s\")" %(username, password)
         ww = self.execute_statement(sql)
-        # print type(ww)
+        print type(ww)
         # if ww is None:
         #     print 'helloworld'
         return ww
@@ -135,9 +133,5 @@ tt = MySQLTest()
 # ss = tt.execute_statement(sql)
 # for e in ss:
 #     print e[1]
-# ww = tt.register('2014021065', '021065')
+# ww = tt.register()
 # ee = tt.execute_statement(ww)
-# if ee:
-#     print 0
-# else:
-#     print 2
