@@ -11,7 +11,6 @@
 import wx
 import wx.grid
 import PanelsFile
-import GenericTable
 from SQL_test import MySQLTest
 
 
@@ -74,7 +73,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
     def register_buttons(self, event):
         username = self.nameTextCtrl.GetRange(0, 16)
         password = self.passwordTextCtrl.GetRange(0, 20)
-        if len(username)==0 or len(password)==0:
+        if len(username) == 0 or len(password) == 0:
             wx.MessageBox(u'用户名或密码为空', 'Warning', wx.OK | wx.ICON_INFORMATION)
             return 0
         rights = self.sqlexecute.register(username, password)
@@ -89,6 +88,9 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
     def confisrm_button(self, event):
         username = self.nameTextCtrl.GetRange(0, 16)
         password = self.passwordTextCtrl.GetRange(0, 20)
+        if len(username) == 0 or len(password) == 0:
+            wx.MessageBox(u'用户名或密码为空', 'Warning', wx.OK | wx.ICON_INFORMATION)
+            return 0
         temp = self.sqlexecute.show_data('unandpassword', 'username', username)
         temp_2 = self.sqlexecute.execute_statement(temp)
         if temp_2:
