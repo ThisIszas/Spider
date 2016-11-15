@@ -35,7 +35,7 @@ class MySQLTest:
         return sql
 
     def insert_info(self, stunum, stuname, stuadress, stusex, stuage, stusituation, table_name):
-        sql_1 = "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (table_name, stunum, stuname,
+        sql_1 = u"INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (table_name, stunum, stuname,
                                                                                 stuadress, stusex, stuage, stusituation)
         # self.execute_statement(sql_1)
         return sql_1
@@ -50,15 +50,15 @@ class MySQLTest:
         algorithm_grade = splited_stu_info[6]
         computer_networks_grade = splited_stu_info[7]
         higher_mathematics_grade = splited_stu_info[8]
-        total_grade = splited_stu_info[9]
-        average_grade = splited_stu_info[10]
-        teacher = splited_stu_info[11]
-        sql_1 = "INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'," \
-                " '%s')" % (table_name, stunum, stuname, sql_grade, composition_principle_grade,
+        teacher = splited_stu_info[9]
+        sql_1 = u"INSERT INTO %s (学号,姓名,数据库,组成原理,操作系统,数据结构,算法,计算机网络,高数,任课教师) " \
+                u"VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s','%s')" \
+                 % (table_name, stunum, stuname, sql_grade, composition_principle_grade,
                             operate_system_grade, data_structure_grade, algorithm_grade, computer_networks_grade,
-                            higher_mathematics_grade, total_grade, average_grade, teacher)
-        # self.execute_statement(sql_1)
-        return sql_1
+                            higher_mathematics_grade, teacher)
+        print sql_1
+        self.execute_statement(sql_1)
+        # return sql_1
 
     def delete_info(self, table_name, fields_name, symbol, temp_value):
         sql = "DELETE FROM %s WHERE %s %s \"%s\"" % (table_name, fields_name, symbol, temp_value)
@@ -121,7 +121,14 @@ class MySQLTest:
         # if ww is None:
         #     print 'helloworld'
         return ww
-tt = MySQLTest()
+
+    def cal_all_grade(self):
+        sql = "update 学生成绩信息 set 总成绩=(数据库+组成原理+操作系统+数据结构+算法+计算机网络+高数);"
+        self.execute_statement(sql)
+        sql_2 = "update 学生成绩信息 set 平均成绩=总成绩/7;"
+        self.execute_statement(sql_2)
+
+# tt = MySQLTest()
 # tt.drop_table("justAqTest")
 # tt.create_table("justAqTest")
 # tt.insert_info('zas', 'Zheng', 18, 'M', 100000, 'justAqTest')
@@ -135,3 +142,5 @@ tt = MySQLTest()
 #     print e[1]
 # ww = tt.register()
 # ee = tt.execute_statement(ww)
+# jjj = ["45","45","45","45","457","878","458","78","457","gdf"]
+# tt.insert_info_2("fsdfsd",jjj)

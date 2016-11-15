@@ -103,12 +103,13 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
             return 0
         base_info_of_student_panel = PanelsFile.BaseInfoOfStudentPanel
         grades_of_student = PanelsFile.GradesOfStudent
+        a_test_panel = PanelsFile.ATestPanel3
         self.show_elements = False
         self.show_element(self.show_elements)
         self.notebook.Show(True)
         form1 = base_info_of_student_panel(self.notebook)
         form2 = grades_of_student(self.notebook)
-        form3 = ATestPanel3(self.notebook)
+        form3 = a_test_panel(self.notebook)
         self.notebook.AddPage(form1, u"基本信息")
         self.notebook.AddPage(form2, u"成绩信息")
         self.notebook.AddPage(form3, "test2")
@@ -123,10 +124,6 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.register_button.Show(show_elements)
 
 
-class ATestPanel3(wx.Panel):
-    def __init__(self, *args, **kwargs):
-        super(ATestPanel3, self).__init__(*args, **kwargs)
-        self.login_name_label = wx.StaticText(self, label=u"妈的.终于写完框架了-3", pos=(120, 160))
 
 
 app = wx.App(False)
