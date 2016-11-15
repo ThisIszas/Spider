@@ -44,10 +44,13 @@ class BaseInfoOfStudentPanel(wx.Panel):
         col_label = ("学号", "姓名", "家庭地址", "性别", "年龄", "基本情况")
         self.testgrid = wx.grid.Grid(self, size=(880, 300), pos=(10, 60))
         row_label = []
-        for i in range(len(data)):
-            row_label.append(i+1)
-        self.testgrid.baseModel = GenericTable.GenericTable(data, row_label, col_label)
-        self.testgrid.SetTable(self.testgrid.baseModel)
+        if len(data):
+            for i in range(len(data)):
+                row_label.append(i+1)
+            self.testgrid.baseModel = GenericTable.GenericTable(data, row_label, col_label)
+            self.testgrid.SetTable(self.testgrid.baseModel)
+        else:
+            wx.MessageBox('学生信息表中无信息,请插入信息', 'Warning!', wx.OK | wx.ICON_INFORMATION)
 
     def refresh(self, event):
         self.testgrid.Destroy()
@@ -102,7 +105,7 @@ class BaseInfoOfStudentPanel(wx.Panel):
         self.test_grid(sqlsta)
 
     def updata_info(self, event):
-        self.select_item_list2 = [u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
+        self.select_item_list2 = [u'家庭住址', u'性别', u'年龄', u'基本情况']
         self.stunum_temp_label = wx.StaticText(self.second_panel, label=u"修改对象学号:", pos=(0, 5))
         self.stunumvalues_temp = wx.TextCtrl(self.second_panel, size=(80, 25), pos=(82, 0))
         self.column_name_temp = wx.StaticText(self.second_panel, label=u"要修改的列名:", pos=(0, 30))
@@ -187,7 +190,8 @@ class GradesOfStudent(wx.Panel):
         self.sqlstament.cal_all_grade()
         try:
             self.testgrid.Destroy()
-        except:
+        except Exception as e:
+            print e
             pass
         self.test_grid('select * from 学生成绩信息')
 
@@ -209,7 +213,8 @@ class GradesOfStudent(wx.Panel):
     def refresh(self, event):
         try:
             self.testgrid.Destroy()
-        except:
+        except Exception as e:
+            print e
             pass
         self.test_grid('select * from 学生成绩信息')
 
@@ -306,18 +311,18 @@ class GradesOfStudent(wx.Panel):
         self.test_grid('select * from 学生成绩信息')
 
 
-class ATestPanel3(wx.Panel):
+class PrizeOfStudent(wx.Panel):
     def __init__(self, *args, **kwargs):
         self.sqlstament = MySQLTest()
-        self.table_name = u'学生基本信息'
-        self.select_item_list = [u'*', u'学号', u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
-        super(ATestPanel3, self).__init__(*args, **kwargs)
+        self.table_name = u'学生奖惩信息'
+        self.select_item_list = [u'*', u'学号', u'姓名', u'奖项1', u'奖项2', u'奖项3', u'阶段排名', u'时间']
+        super(PrizeOfStudent, self).__init__(*args, **kwargs)
         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
         self.gbsizer = wx.GridBagSizer(hgap=10, vgap=10)
-        self.second_panel = wx.Panel(self, size=(238, 270), pos=(600, 100),
+        self.second_panel = wx.Panel(self, size=(238, 270), pos=(655, 100),
                                      style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
 
-        self.title_label = wx.StaticText(self, label=u"学生基本信息管理", pos=(308, 10))
+        self.title_label = wx.StaticText(self, label=u"学生奖惩信息管理", pos=(308, 10))
         wx.StaticText(self, label=u"查询项:", pos=(10, 10))
         wx.StaticText(self, label=u"值:", pos=(96, 10))
         self.title_label.SetFont(title_font)
@@ -337,22 +342,25 @@ class ATestPanel3(wx.Panel):
         self.select_items = wx.ComboBox(self, pos=(10, 30), size=(80, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
         self.valueTextCtrl = wx.TextCtrl(self, value="", pos=(92, 30), size=(50, 25))
-        self.test_grid('select * from 学生基本信息')
+        self.test_grid('select * from 学生奖惩信息')
 
     def test_grid(self, sqlsta):
         import SqlUtil
         data = SqlUtil.query_data(sqlsta)
-        col_label = ("学号", "姓名", "家庭地址", "性别", "年龄", "基本情况")
+        col_label = ("学号", "姓名", "奖项1", "奖项2", "奖项3", "阶段排名", "时间")
         self.testgrid = wx.grid.Grid(self, size=(880, 300), pos=(10, 60))
         row_label = []
-        for i in range(len(data)):
-            row_label.append(i+1)
-        self.testgrid.baseModel = GenericTable.GenericTable(data, row_label, col_label)
-        self.testgrid.SetTable(self.testgrid.baseModel)
+        if len(data):
+            for i in range(len(data)):
+                row_label.append(i+1)
+            self.testgrid.baseModel = GenericTable.GenericTable(data, row_label, col_label)
+            self.testgrid.SetTable(self.testgrid.baseModel)
+        else:
+            wx.MessageBox('奖惩表中无信息,请插入信息', 'Warning!', wx.OK | wx.ICON_INFORMATION)
 
     def refresh(self, event):
         self.testgrid.Destroy()
-        self.test_grid('select * from 学生基本信息')
+        self.test_grid('select * from 学生奖惩信息')
 
     def delete_info(self, event):
         stunum = "00000000"
@@ -379,12 +387,13 @@ class ATestPanel3(wx.Panel):
             splited_stu_info = stu_infos.split(' ')
             stunum = splited_stu_info[0]
             stuname = splited_stu_info[1]
-            stu_adress = splited_stu_info[2]
-            stusex = splited_stu_info[3]
-            stuage = splited_stu_info[4]
-            stusituation = splited_stu_info[5]
-            sqlsta = self.sqlstament.insert_info(stunum, stuname, stu_adress, stusex, stuage, stusituation,
-                                                 self.table_name)
+            prize_1 = splited_stu_info[2]
+            prize_2 = splited_stu_info[3]
+            prize_3 = splited_stu_info[4]
+            stage_ranking = splited_stu_info[5]
+            the_data = splited_stu_info[6]
+            sqlsta = self.sqlstament.insert_info3(self.table_name, stunum, stuname, prize_1, prize_2, prize_3,
+                                                  stage_ranking, the_data)
             print sqlsta
             self.sqlstament.execute_statement(sqlsta)
         else:
@@ -403,7 +412,7 @@ class ATestPanel3(wx.Panel):
         self.test_grid(sqlsta)
 
     def updata_info(self, event):
-        self.select_item_list2 = [u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
+        self.select_item_list2 = [u'奖项1', u'奖项2', u'奖项3', u'阶段排名', u'时间']
         self.stunum_temp_label = wx.StaticText(self.second_panel, label=u"修改对象学号:", pos=(0, 5))
         self.stunumvalues_temp = wx.TextCtrl(self.second_panel, size=(80, 25), pos=(82, 0))
         self.column_name_temp = wx.StaticText(self.second_panel, label=u"要修改的列名:", pos=(0, 30))
@@ -446,3 +455,60 @@ class ATestPanel3(wx.Panel):
         self.change_value.Show(False)
         self.ok_button.Show(False)
         self.cancel_button.Show(False)
+
+
+class BackUpOfStuInfo(wx.Panel):
+    def __init__(self, *args, **kwargs):
+        self.sqlstament = MySQLTest()
+        self.table_name = u'学生基本信息_bak'
+        self.select_item_list = [u'*', u'学号', u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
+        super(BackUpOfStuInfo, self).__init__(*args, **kwargs)
+        title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
+        self.gbsizer = wx.GridBagSizer(hgap=10, vgap=10)
+
+        self.warning_label = wx.StaticText(self, label=u'注:此表只记录被删除学生的信息', pos=(325, 35))
+        self.warning_label.SetForegroundColour('red')
+        self.title_label = wx.StaticText(self, label=u"学生奖惩信息管理", pos=(308, 10))
+        wx.StaticText(self, label=u"查询项:", pos=(10, 10))
+        wx.StaticText(self, label=u"值:", pos=(96, 10))
+        self.title_label.SetFont(title_font)
+        self.title_label.SetForegroundColour("#21c4c3")  # 设置字体颜色
+        self.SelectButton = wx.Button(self, label=u'查询', pos=(144, 30), size=(33, 25))
+        self.select_items = wx.ComboBox(self, pos=(10, 30), size=(80, -1), choices=self.select_item_list,
+                                        style=wx.CB_DROPDOWN)
+        self.valueTextCtrl = wx.TextCtrl(self, value="", pos=(92, 30), size=(50, 25))
+        self.test_grid('select * from 学生基本信息_bak')
+        self.SelectButton.Bind(wx.EVT_BUTTON, self.query_info)
+
+        self.RefreshButton = wx.Button(self, label=u'刷新', pos=(180, 30), size=(33, 25))
+        self.RefreshButton.Bind(wx.EVT_BUTTON, self.refresh)
+
+    def test_grid(self, sqlsta):
+        import SqlUtil
+        data = SqlUtil.query_data(sqlsta)
+        col_label = (u'学号', u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况')
+        self.testgrid = wx.grid.Grid(self, size=(800, 300), pos=(10, 60))
+        row_label = []
+        if len(data):
+            for i in range(len(data)):
+                row_label.append(i+1)
+            self.testgrid.baseModel = GenericTable.GenericTable(data, row_label, col_label)
+            self.testgrid.SetTable(self.testgrid.baseModel)
+        else:
+            pass
+
+    def query_info(self, event):
+        self.testgrid.Destroy()
+        word = self.select_items.GetSelection()
+        select_item_value = self.select_items.GetItems()[word]
+        value = self.valueTextCtrl.GetRange(0, 50)
+        if select_item_value == u"年龄":
+            sqlsta = self.sqlstament.select_info(self.table_name, select_item_value, '=', value, 666)
+        else:
+            sqlsta = self.sqlstament.select_info(self.table_name, select_item_value, '=', value, 333)
+        print sqlsta
+        self.test_grid(sqlsta)
+
+    def refresh(self, event):
+        self.testgrid.Destroy()
+        self.test_grid('select * from 学生基本信息')

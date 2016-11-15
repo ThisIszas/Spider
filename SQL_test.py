@@ -1,16 +1,11 @@
 # coding:utf-8
-# http://www.runoob.com/python/python-mysql.html
 import MySQLdb
 
 
 class MySQLTest:
     def __init__(self):
         self.db = MySQLdb.Connection('localhost', 'root', '123456.qaz', 'TESTDB', charset='utf8')
-        # self.db.set_character_set('utf-8')
         self.cursor = self.db.cursor()
-        # self.cursor.execute('SET NAMES utf8;')
-        # self.cursor.execute('SET CHARACTER SET utf8;')
-        # self.cursor.execute('SET character_set_connection=utf8;')
         self.fname = "hehe"
         self.lname = "hehe"
         self.age = 0
@@ -37,7 +32,6 @@ class MySQLTest:
     def insert_info(self, stunum, stuname, stuadress, stusex, stuage, stusituation, table_name):
         sql_1 = u"INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s')" % (table_name, stunum, stuname,
                                                                                 stuadress, stusex, stuage, stusituation)
-        # self.execute_statement(sql_1)
         return sql_1
 
     def insert_info_2(self, table_name, splited_stu_info):
@@ -58,11 +52,14 @@ class MySQLTest:
                             higher_mathematics_grade, teacher)
         print sql_1
         self.execute_statement(sql_1)
-        # return sql_1
+
+    def insert_info3(self, table_name, stunum, stuname, prize_1, prize_2, prize_3, stage_ranking, the_data):
+        sql = u"INSERT INTO %s VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" % \
+              (table_name, stunum, stuname, prize_1, prize_2, prize_3, stage_ranking, the_data)
+        return sql
 
     def delete_info(self, table_name, fields_name, symbol, temp_value):
         sql = "DELETE FROM %s WHERE %s %s \"%s\"" % (table_name, fields_name, symbol, temp_value)
-        # self.execute_statement(sql)
         return sql
 
     def alter_info(self, table_name, fields_name_1, temp_value, fields_name_2, temp_value_2, flag):
@@ -77,8 +74,6 @@ class MySQLTest:
     def execute_statement(self, sql):
         try:
             cursor = self.db.cursor()
-            # temp = self.cursor.execute(sql)
-            # self.db.commit()
             cursor.execute(sql)
             self.db.commit()
             return cursor.fetchall()
@@ -89,21 +84,7 @@ class MySQLTest:
     def show_data(self, table_name, colname, values, symbol='='):
         sql = "select * from %s where %s %s '%s'" % (table_name, colname, symbol, values)
         return sql
-        """
-        try:
-            self.execute_statement(sql)
-            results = self.cursor.fetchall()
-            for each in results:
-                fname = each[0]
-                lname = each[1]
-                age = each[2]
-                sex = each[3]
-                income = each[4]
-                print "fname:%s lname:%s age:%d sex:%s income:%d" % (fname, lname, age, sex, income)
-        except Exception as e:
-            print e
-            print "Error : unable to fetch data"
-        """
+
     def close_db(self):
         self.db.close()
 
@@ -118,8 +99,6 @@ class MySQLTest:
         sql = "insert into unandpassword VALUES (\"%s\",\"%s\")" %(username, password)
         ww = self.execute_statement(sql)
         print type(ww)
-        # if ww is None:
-        #     print 'helloworld'
         return ww
 
     def cal_all_grade(self):
@@ -127,20 +106,3 @@ class MySQLTest:
         self.execute_statement(sql)
         sql_2 = "update 学生成绩信息 set 平均成绩=总成绩/7;"
         self.execute_statement(sql_2)
-
-# tt = MySQLTest()
-# tt.drop_table("justAqTest")
-# tt.create_table("justAqTest")
-# tt.insert_info('zas', 'Zheng', 18, 'M', 100000, 'justAqTest')
-# tt.show_data("justAqTest")
-# tt.close_db()
-# tt.delete_info(u"学生基本信息", u'学号', '=', '25180')
-# sql = tt.show_data('unandpassword', 'username', '2014021073')
-# print sql
-# ss = tt.execute_statement(sql)
-# for e in ss:
-#     print e[1]
-# ww = tt.register()
-# ee = tt.execute_statement(ww)
-# jjj = ["45","45","45","45","457","878","458","78","457","gdf"]
-# tt.insert_info_2("fsdfsd",jjj)

@@ -32,6 +32,10 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.register_button = wx.Button(self.login_panel, label=u'注册', pos=(407, 210), size=(73, -1))
         self.username_label = wx.StaticText(self.login_panel, label=u"用户名")
         self.password = wx.StaticText(self.login_panel, label=u"密码")
+        self.register_code = wx.StaticText(self.login_panel, label=u'注册码', pos=(290, 120))
+        self.register_code_text = wx.TextCtrl(self.login_panel, pos=(330, 117), size=(150, 25))
+        self.register_code.Show(False)
+        self.register_code_text.Show(False)
         self.nameTextCtrl = wx.TextCtrl(self.login_panel, value="")
         self.passwordTextCtrl = wx.TextCtrl(self.login_panel, value=u"", style=wx.TE_PASSWORD)
         self.Bind(wx.EVT_BUTTON, self.confisrm_button, self.confirm_button)
@@ -56,6 +60,8 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
             control.SetDimensions(x=x, y=y, width=width, height=height)
 
     def register_button_hide(self, event):
+        self.register_code.Show(True)
+        self.register_code_text.Show(True)
         self.reconfirm_button.Show(True)
         self.login_name_Label.Show(False)
         self.confirm_button.Show(False)
@@ -64,6 +70,10 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
     def register_buttons(self, event):
         username = self.nameTextCtrl.GetRange(0, 16)
         password = self.passwordTextCtrl.GetRange(0, 20)
+        register_code = self.register_code_text.GetRange(0, 30)
+        if register_code != "sjuxhnsk45fds":
+            wx.MessageBox(u'注册码错误,拒绝注册,请检查注册码.', 'Warning', wx.OK | wx.ICON_INFORMATION)
+            return 0
         if len(username) == 0 or len(password) == 0:
             wx.MessageBox(u'用户名或密码为空', 'Warning', wx.OK | wx.ICON_INFORMATION)
             return 0
@@ -75,6 +85,8 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.login_name_Label.Show(True)
         self.confirm_button.Show(True)
         self.register_button.Show(True)
+        self.register_code.Show(False)
+        self.register_code_text.Show(False)
 
     def confisrm_button(self, event):
         username = self.nameTextCtrl.GetRange(0, 16)
@@ -94,15 +106,19 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
             return 0
         base_info_of_student_panel = PanelsFile.BaseInfoOfStudentPanel
         grades_of_student = PanelsFile.GradesOfStudent
+        prize_of_student = PanelsFile.PrizeOfStudent
+        backup_of_stuinfo = PanelsFile.BackUpOfStuInfo
         self.show_elements = False
         self.show_element(self.show_elements)
         self.notebook.Show(True)
         form1 = base_info_of_student_panel(self.notebook)
         form2 = grades_of_student(self.notebook)
-        form3 = ATestPanel3(self.notebook)
+        form3 = prize_of_student(self.notebook)
+        form4 = backup_of_stuinfo(self.notebook)
         self.notebook.AddPage(form1, u"基本信息")
         self.notebook.AddPage(form2, u"成绩信息")
-        self.notebook.AddPage(form3, "test2")
+        self.notebook.AddPage(form3, u"奖惩信息")
+        self.notebook.AddPage(form4, u'备份信息')
 
     def show_element(self, show_elements):
         self.login_name_Label.Show(show_elements)
@@ -112,12 +128,8 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.nameTextCtrl.Show(show_elements)
         self.passwordTextCtrl.Show(show_elements)
         self.register_button.Show(show_elements)
-
-
-class ATestPanel3(wx.Panel):
-    def __init__(self, *args, **kwargs):
-        super(ATestPanel3, self).__init__(*args, **kwargs)
-        self.login_name_label = wx.StaticText(self, label=u"妈的.终于写完框架了-3", pos=(120, 160))
+        self.register_code.Show(show_elements)
+        self.register_code_text.Show(show_elements)
 
 
 app = wx.App(False)

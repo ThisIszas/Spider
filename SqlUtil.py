@@ -18,9 +18,6 @@ def query_data(sql):
         conn = get_conn()
         cursor = conn.cursor()
         cursor.execute(sql)
-#        print cursor.fetchall()
-#        for row in cursor.fetchall():
-#            print unicode(row)
         return cursor.fetchall()
     except Exception, e:
         print e
@@ -42,7 +39,3 @@ def createOrInitTable(sql):
         cursor.close()
         conn.close()
 
-# if __name__ == '__main__':
-#     data = query_data(u'select * from 学生基本信息')
-    # for e in data:
-    #     print e
