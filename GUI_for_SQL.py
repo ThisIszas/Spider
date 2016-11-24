@@ -60,6 +60,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
             control.SetDimensions(x=x, y=y, width=width, height=height)
 
     def register_button_hide(self, event):
+        print event
         self.register_code.Show(True)
         self.register_code_text.Show(True)
         self.reconfirm_button.Show(True)
@@ -68,6 +69,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.register_button.Show(False)
 
     def register_buttons(self, event):
+        print event
         username = self.nameTextCtrl.GetRange(0, 16)
         password = self.passwordTextCtrl.GetRange(0, 20)
         register_code = self.register_code_text.GetRange(0, 30)
@@ -89,6 +91,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.register_code_text.Show(False)
 
     def confisrm_button(self, event):
+        print event
         username = self.nameTextCtrl.GetRange(0, 16)
         password = self.passwordTextCtrl.GetRange(0, 20)
         if len(username) == 0 or len(password) == 0:

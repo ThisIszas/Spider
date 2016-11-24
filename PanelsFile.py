@@ -7,12 +7,11 @@ from SQL_test import MySQLTest
 
 class BaseInfoOfStudentPanel(wx.Panel):
     def __init__(self, *args, **kwargs):
-        self.sqlstament = MySQLTest()
+        self.sqlstament = MySQLTest()  # 初始化过程,同登录页里的内容,懒得写
         self.table_name = u'学生基本信息'
         self.select_item_list = [u'*', u'学号', u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
         super(BaseInfoOfStudentPanel, self).__init__(*args, **kwargs)
         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
-        self.gbsizer = wx.GridBagSizer(hgap=10, vgap=10)
         self.second_panel = wx.Panel(self, size=(238, 270), pos=(600, 100),
                                      style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
 
@@ -225,9 +224,8 @@ class GradesOfStudent(wx.Panel):
             stunum = entry_dlg.GetValue()
         entry_dlg.Destroy()
         if stunum:
-            splited_stunum = stunum.split(' ')  # 因为用户输入的学号可能带空格,所以先把字符按空格拆分,再进行连接.(分割后为一个数组)
-        # 同理添加数据时也按空格进行分割.
-            joined_stunum = ''.join(splited_stunum)  # 对已分割后的字符串拼接
+            splited_stunum = stunum.split(' ')  # 同上个模块内的函数
+            joined_stunum = ''.join(splited_stunum)
             stunum = joined_stunum
         sqlsta = self.sqlstament.delete_info(self.table_name, u'学号', '=', stunum)
         print sqlsta
@@ -318,7 +316,6 @@ class PrizeOfStudent(wx.Panel):
         self.select_item_list = [u'*', u'学号', u'姓名', u'奖项1', u'奖项2', u'奖项3', u'阶段排名', u'时间']
         super(PrizeOfStudent, self).__init__(*args, **kwargs)
         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
-        self.gbsizer = wx.GridBagSizer(hgap=10, vgap=10)
         self.second_panel = wx.Panel(self, size=(238, 270), pos=(655, 100),
                                      style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
 
@@ -464,7 +461,6 @@ class BackUpOfStuInfo(wx.Panel):
         self.select_item_list = [u'*', u'学号', u'姓名', u'家庭住址', u'性别', u'年龄', u'基本情况']
         super(BackUpOfStuInfo, self).__init__(*args, **kwargs)
         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
-        self.gbsizer = wx.GridBagSizer(hgap=10, vgap=10)
 
         self.warning_label = wx.StaticText(self, label=u'注:此表只记录被删除学生的信息', pos=(325, 35))
         self.warning_label.SetForegroundColour('red')
@@ -511,4 +507,4 @@ class BackUpOfStuInfo(wx.Panel):
 
     def refresh(self, event):
         self.testgrid.Destroy()
-        self.test_grid('select * from 学生基本信息')
+        self.test_grid('SELECT * FROM testdb.学生基本信息_bak')
