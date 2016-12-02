@@ -8,4 +8,4 @@
 双击GUI_for_SQL运行程序<br>
 <p align="right">20161124</p>
 Auther   zas<br>
-GroupName  老子就是来打酱油的<br>
+GroupName  打酱油<br>
