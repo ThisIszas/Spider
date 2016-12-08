@@ -9,6 +9,8 @@ class create_bu(wx.Frame):
         self.num = 1
         self.create_button(self.num)
         self.Show()
+        buttonlist = []
+        buttonlist.append(wx.Button)
 
     def create_button(self, n):
         button_name="button"+str(n)
@@ -16,7 +18,7 @@ class create_bu(wx.Frame):
         print button_name
         a=wx.Button(self.panel, label=button_name, pos=(n*100, n+100))
         a.Bind(wx.EVT_BUTTON,self.create_button)
-    def c(self,):
+
 app = wx.App()
 frame = create_bu()
 app.MainLoop()
