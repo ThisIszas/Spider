@@ -106,3 +106,11 @@ class MySQLTest:
         self.execute_statement(sql)
         sql_2 = "update 学生成绩信息 set 平均成绩=总成绩/7;"
         self.execute_statement(sql_2)
+
+    def adv_query(self, tn1, in1, s1, v1, tn2='0', in2='0', s2='0', v2='0', flag=1):
+        if flag > 1:
+            sql = "select * from %s WHERE %s in (SELECT %s FROM %s WHERE %s %s %s)" % (tn1, in1, in1, tn2,
+                                                                                      in2, s2, v2)
+        else:
+            sql = "select * from %s WHERE %s %s %s" %(tn1, in1, s1, v1)
+        return sql

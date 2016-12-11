@@ -14,29 +14,24 @@ class BaseInfoOfStudentPanel(wx.Panel):
         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
         self.second_panel = wx.Panel(self, size=(238, 270), pos=(600, 100),
                                      style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
-        self.adv_select_panel = wx.Panel(self, size=(338, 270), pos=(230, 60),
-                                     style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
 
         self.title_label = wx.StaticText(self, label=u"学生基本信息管理", pos=(308, 10))
         wx.StaticText(self, label=u"查询项:", pos=(10, 10))
         wx.StaticText(self, label=u"值:", pos=(96, 10))
         self.title_label.SetFont(title_font)
         self.title_label.SetForegroundColour("#21c4c3")  # 设置字体颜色
-        self.more_use_time = 1
+
         self.SelectButton = wx.Button(self, label=u'查询', pos=(144, 30), size=(33, 25))
-        self.AdvanceQuireButton = wx.Button(self, label=u'高级查询', pos=(177, 30), size=(58, 25))
         self.AddButton = wx.Button(self, label=u'添加一行', pos=(680, 8), size=(60, 25))
         self.DropButton = wx.Button(self, label=u'删除一行', pos=(680, 35), size=(60, 25))
         self.UpdateButton = wx.Button(self, label=u'修改数据', pos=(740, 8), size=(60, 25))
         self.RefreshButton = wx.Button(self, label=u'刷新', pos=(740, 35), size=(60, 25))
         self.SelectButton.Bind(wx.EVT_BUTTON, self.query_info)
-        self.AdvanceQuireButton.Bind(wx.EVT_BUTTON, self.advance_quire_step1)
         self.DropButton.Bind(wx.EVT_BUTTON, self.delete_info)
         self.AddButton.Bind(wx.EVT_BUTTON, self.add_info)
         self.RefreshButton.Bind(wx.EVT_BUTTON, self.refresh)
         self.UpdateButton.Bind(wx.EVT_BUTTON, self.updata_info)
 
-        self.adv_select_time_use = 1
         self.select_items = wx.ComboBox(self, pos=(10, 30), size=(80, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
         self.valueTextCtrl = wx.TextCtrl(self, value="", pos=(92, 30), size=(50, 25))
@@ -54,109 +49,11 @@ class BaseInfoOfStudentPanel(wx.Panel):
             self.testgrid.baseModel = GenericTable.GenericTable(data, row_label, col_label)
             self.testgrid.SetTable(self.testgrid.baseModel)
         else:
-            wx.MessageBox('学生信息表中无返回信息,请插入信息或刷新', 'Warning!', wx.OK | wx.ICON_INFORMATION)
+            wx.MessageBox('学生信息表中无信息,请插入信息', 'Warning!', wx.OK | wx.ICON_INFORMATION)
 
     def refresh(self, event):
-        try:
-            self.testgrid.Destroy()
-        except Exception as e:
-            print e
-            pass
+        self.testgrid.Destroy()
         self.test_grid('select * from 学生基本信息')
-
-    def advance_quire_step1(self, event):
-        try:
-            self.testgrid.Destroy()
-        except Exception as e:
-            print e
-            pass
-        if self.adv_select_time_use > 1:
-            self.show_adv_select_panel()
-            return 0
-        self.more_choice_time = 1
-        select_item_list2 = [u'学生基本信息', u'学生成绩信息', u'学生奖惩信息']
-        self.more_choice_button = wx.Button(self.adv_select_panel, label='More', pos=(246, 29), size=(40, 27))
-        self.more_choice_button.Bind(wx.EVT_BUTTON, self.more_choice_button_fun)
-        self.adv_confirm_button = wx.Button(self.adv_select_panel, pos=(85, 100), size=(100,-1), label=u'确定')
-        self.adv_confirm_button.Bind(wx.EVT_BUTTON, self.unshow_adv_select_panel)
-        self.adv_select_table1 = wx.ComboBox(self.adv_select_panel, pos=(10, 30), size=(100, -1), choices=select_item_list2,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_select_item1 = wx.ComboBox(self.adv_select_panel, pos=(115, 30), size=(60, -1), choices=self.select_item_list,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_symbol1 = wx.TextCtrl(self.adv_select_panel, pos=(180, 30), size=(20, -1))
-        self.adv_items_value1 = wx.TextCtrl(self.adv_select_panel, pos=(205, 30), size=(40, -1))
-        self.adv_select_time_use += 1
-
-    def unshow_adv_select_panel(self, event):
-        print "more_choice_time:" + str(self.more_choice_time)
-        self.more_choice_button.Show(False)
-        self.adv_select_table1.Show(False)
-        self.adv_select_item1.Show(False)
-        self.adv_symbol1.Show(False)
-        self.adv_items_value1.Show(False)
-        if self.more_choice_time == 2:
-            self.adv_select_table2.Show(False)
-            self.adv_select_item2.Show(False)
-            self.adv_symbol2.Show(False)
-            self.adv_items_value2.Show(False)
-        self.adv_confirm_button.Show(False)
-        self.real_adv_fun()
-        self.more_choice_time = 1
-
-    def real_adv_fun(self):
-        print "test:"+ str(self.more_choice_time)
-        table_name1_pos = self.adv_select_table1.GetSelection()
-        table_name1 = self.adv_select_table1.GetItems()[table_name1_pos]
-        items_pos1 = self.adv_select_item1.GetSelection()
-        item_name1 = self.adv_select_item1.GetItems()[items_pos1]
-        symbol1 = self.adv_symbol1.GetRange(0,6)
-        value1 = self.adv_items_value1.GetRange(0,10)
-        if self.more_choice_time > 1:
-            table_name2_pos = self.adv_select_table2.GetSelection()
-            table_name2 = self.adv_select_table2.GetItems()[table_name2_pos]
-            items_pos2 = self.adv_select_item2.GetSelection()
-            item_name2 = self.adv_select_item2.GetItems()[items_pos2]
-            symbol2 = self.adv_symbol2.GetRange(0,6)
-            value2 = self.adv_items_value2.GetRange(0,10)
-            sqlste = self.sqlstament.adv_query(table_name1,item_name1,symbol1,value1,
-                                               table_name2,item_name2,symbol2,value2, 2)
-        else:
-            sqlste = self.sqlstament.adv_query(table_name1, item_name1, symbol1, value1, 1)
-        if sqlste is not None:
-            print sqlste
-            self.test_grid(sqlste)
-
-    def show_adv_select_panel(self):
-        print "more1"
-        self.more_choice_button.Show(True)
-        self.adv_select_table1.Show(True)
-        self.adv_select_item1.Show(True)
-        self.adv_symbol1.Show(True)
-        self.adv_items_value1.Show(True)
-        self.adv_confirm_button.Show(True)
-        self.more_choice_time = 1
-
-    def more_choice_2(self):
-        print "more2"
-        self.adv_select_table2.Show(True)
-        self.adv_select_item2.Show(True)
-        self.adv_symbol2.Show(True)
-        self.adv_items_value2.Show(True)
-        self.more_choice_time = 2
-
-    def more_choice_button_fun(self, event):
-        if self.adv_select_time_use > 1 and self.more_use_time > 1:
-            self.more_choice_2()
-            return 0
-        self.more_use_time = 2
-        self.more_choice_time += 1
-        select_item_list2 = [u'学生基本信息', u'学生成绩信息', u'学生奖惩信息']
-        self.adv_select_table2 = wx.ComboBox(self.adv_select_panel, pos=(10, 70), size=(100, -1), choices=select_item_list2,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_select_item2 = wx.ComboBox(self.adv_select_panel, pos=(115, 70), size=(60, -1), choices=self.select_item_list,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_symbol2 = wx.TextCtrl(self.adv_select_panel, pos=(180, 70), size=(20, -1))
-        self.adv_items_value2 = wx.TextCtrl(self.adv_select_panel, pos=(205, 70), size=(40, -1))
 
     def delete_info(self, event):
         stunum = "00000000"
@@ -259,9 +156,6 @@ class GradesOfStudent(wx.Panel):
         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体   600,100
         self.second_panel = wx.Panel(self, size=(238, 270), pos=(300, 100),
                                      style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
-        self.adv_select_panel = wx.Panel(self, size=(338, 270), pos=(30, 60),
-                                     style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
-
         self.select_item_list = [u'*', u'学号', u'姓名', u'数据库', u'组成原理', u'操作系统', u'数据结构',
                                  u'算法', u'计算机网络', u'高数', u'总成绩', u'平均成绩', u'任课教师']
         self.sqlstament = MySQLTest()
@@ -273,11 +167,8 @@ class GradesOfStudent(wx.Panel):
 
         wx.StaticText(self, label=u"查询项:", pos=(10, 10))
         wx.StaticText(self, label=u"值:", pos=(96, 10))
-        self.more_use_time = 1
-        self.adv_select_time_use = 1
+
         self.SelectButton = wx.Button(self, label=u'查询', pos=(144, 30), size=(33, 25))
-        self.AdvanceQuireButton = wx.Button(self, label=u'高级查询', pos=(177, 30), size=(58, 25))
-        self.AdvanceQuireButton.Bind(wx.EVT_BUTTON, self.advance_quire_step1)
         self.AddButton = wx.Button(self, label=u'添加一行', pos=(680, 8), size=(60, 25))
         self.DropButton = wx.Button(self, label=u'删除一行', pos=(680, 35), size=(60, 25))
         self.UpdateButton = wx.Button(self, label=u'修改数据', pos=(740, 8), size=(60, 25))
@@ -317,108 +208,6 @@ class GradesOfStudent(wx.Panel):
             self.testgrid.SetTable(self.testgrid.baseModel)
         else:
             wx.MessageBox('成绩表表中无信息,请插入信息', 'Warning!', wx.OK | wx.ICON_INFORMATION)
-
-    def refresh(self, event):
-        try:
-            self.testgrid.Destroy()
-        except Exception as e:
-            print e
-            pass
-        self.test_grid('select * from 学生基本信息')
-
-    def advance_quire_step1(self, event):
-        try:
-            self.testgrid.Destroy()
-        except Exception as e:
-            print e
-            pass
-        if self.adv_select_time_use > 1:
-            self.show_adv_select_panel()
-            return 0
-        self.more_choice_time = 1
-        select_item_list2 = [u'学生基本信息', u'学生成绩信息', u'学生奖惩信息']
-        self.more_choice_button = wx.Button(self.adv_select_panel, label='More', pos=(246, 29), size=(40, 27))
-        self.more_choice_button.Bind(wx.EVT_BUTTON, self.more_choice_button_fun)
-        self.adv_confirm_button = wx.Button(self.adv_select_panel, pos=(85, 100), size=(100,-1), label=u'确定')
-        self.adv_confirm_button.Bind(wx.EVT_BUTTON, self.unshow_adv_select_panel)
-        self.adv_select_table1 = wx.ComboBox(self.adv_select_panel, pos=(10, 30), size=(100, -1), choices=select_item_list2,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_select_item1 = wx.ComboBox(self.adv_select_panel, pos=(115, 30), size=(60, -1), choices=self.select_item_list,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_symbol1 = wx.TextCtrl(self.adv_select_panel, pos=(180, 30), size=(20, -1))
-        self.adv_items_value1 = wx.TextCtrl(self.adv_select_panel, pos=(205, 30), size=(40, -1))
-        self.adv_select_time_use += 1
-
-    def unshow_adv_select_panel(self, event):
-        print "more_choice_time:" + str(self.more_choice_time)
-        self.more_choice_button.Show(False)
-        self.adv_select_table1.Show(False)
-        self.adv_select_item1.Show(False)
-        self.adv_symbol1.Show(False)
-        self.adv_items_value1.Show(False)
-        if self.more_choice_time == 2:
-            self.adv_select_table2.Show(False)
-            self.adv_select_item2.Show(False)
-            self.adv_symbol2.Show(False)
-            self.adv_items_value2.Show(False)
-        self.adv_confirm_button.Show(False)
-        self.real_adv_fun()
-        self.more_choice_time = 1
-
-    def real_adv_fun(self):
-        print "test:"+ str(self.more_choice_time)
-        table_name1_pos = self.adv_select_table1.GetSelection()
-        table_name1 = self.adv_select_table1.GetItems()[table_name1_pos]
-        items_pos1 = self.adv_select_item1.GetSelection()
-        item_name1 = self.adv_select_item1.GetItems()[items_pos1]
-        symbol1 = self.adv_symbol1.GetRange(0,6)
-        value1 = self.adv_items_value1.GetRange(0,10)
-        if self.more_choice_time > 1:
-            table_name2_pos = self.adv_select_table2.GetSelection()
-            table_name2 = self.adv_select_table2.GetItems()[table_name2_pos]
-            items_pos2 = self.adv_select_item2.GetSelection()
-            item_name2 = self.adv_select_item2.GetItems()[items_pos2]
-            symbol2 = self.adv_symbol2.GetRange(0,6)
-            value2 = self.adv_items_value2.GetRange(0,10)
-            sqlste = self.sqlstament.adv_query(table_name1,item_name1,symbol1,value1,
-                                               table_name2,item_name2,symbol2,value2, 2)
-        else:
-            sqlste = self.sqlstament.adv_query(table_name1, item_name1, symbol1, value1, 1)
-        if sqlste is not None:
-            print sqlste
-            self.test_grid(sqlste)
-
-    def show_adv_select_panel(self):
-        print "more1"
-        self.more_choice_button.Show(True)
-        self.adv_select_table1.Show(True)
-        self.adv_select_item1.Show(True)
-        self.adv_symbol1.Show(True)
-        self.adv_items_value1.Show(True)
-        self.adv_confirm_button.Show(True)
-        self.more_choice_time = 1
-
-    def more_choice_2(self):
-        print "more2"
-        self.adv_select_table2.Show(True)
-        self.adv_select_item2.Show(True)
-        self.adv_symbol2.Show(True)
-        self.adv_items_value2.Show(True)
-        self.more_choice_time = 2
-
-    def more_choice_button_fun(self, event):
-        if self.adv_select_time_use > 1 and self.more_use_time > 1:
-            self.more_choice_2()
-            return 0
-        self.more_use_time = 2
-        self.more_choice_time += 1
-        select_item_list2 = [u'学生基本信息', u'学生成绩信息', u'学生奖惩信息']
-        self.adv_select_table2 = wx.ComboBox(self.adv_select_panel, pos=(10, 70), size=(100, -1), choices=select_item_list2,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_select_item2 = wx.ComboBox(self.adv_select_panel, pos=(115, 70), size=(60, -1), choices=self.select_item_list,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_symbol2 = wx.TextCtrl(self.adv_select_panel, pos=(180, 70), size=(20, -1))
-        self.adv_items_value2 = wx.TextCtrl(self.adv_select_panel, pos=(205, 70), size=(40, -1))
 
     def refresh(self, event):
         try:
@@ -529,20 +318,14 @@ class PrizeOfStudent(wx.Panel):
         title_font = wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD)  # 设置字体
         self.second_panel = wx.Panel(self, size=(238, 270), pos=(655, 100),
                                      style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
-        self.adv_select_panel = wx.Panel(self, size=(338, 270), pos=(230, 60),
-                                     style=wx.TAB_TRAVERSAL | wx.CLIP_CHILDREN | wx.FULL_REPAINT_ON_RESIZE)
 
         self.title_label = wx.StaticText(self, label=u"学生奖惩信息管理", pos=(308, 10))
         wx.StaticText(self, label=u"查询项:", pos=(10, 10))
         wx.StaticText(self, label=u"值:", pos=(96, 10))
         self.title_label.SetFont(title_font)
         self.title_label.SetForegroundColour("#21c4c3")  # 设置字体颜色
-        self.more_use_time = 1
-        self.adv_select_time_use = 1
 
         self.SelectButton = wx.Button(self, label=u'查询', pos=(144, 30), size=(33, 25))
-        self.AdvanceQuireButton = wx.Button(self, label=u'高级查询', pos=(177, 30), size=(58, 25))
-        self.AdvanceQuireButton.Bind(wx.EVT_BUTTON, self.advance_quire_step1)
         self.AddButton = wx.Button(self, label=u'添加一行', pos=(680, 8), size=(60, 25))
         self.DropButton = wx.Button(self, label=u'删除一行', pos=(680, 35), size=(60, 25))
         self.UpdateButton = wx.Button(self, label=u'修改数据', pos=(740, 8), size=(60, 25))
@@ -573,114 +356,8 @@ class PrizeOfStudent(wx.Panel):
             wx.MessageBox('奖惩表中无信息,请插入信息', 'Warning!', wx.OK | wx.ICON_INFORMATION)
 
     def refresh(self, event):
-        try:
-            self.testgrid.Destroy()
-        except Exception as e:
-            print e
-            pass
+        self.testgrid.Destroy()
         self.test_grid('select * from 学生奖惩信息')
-
-    def refresh(self, event):
-        try:
-            self.testgrid.Destroy()
-        except Exception as e:
-            print e
-            pass
-        self.test_grid('select * from 学生奖惩信息')
-
-    def advance_quire_step1(self, event):
-        try:
-            self.testgrid.Destroy()
-        except Exception as e:
-            print e
-            pass
-        if self.adv_select_time_use > 1:
-            self.show_adv_select_panel()
-            return 0
-        self.more_choice_time = 1
-        select_item_list2 = [u'学生基本信息', u'学生成绩信息', u'学生奖惩信息']
-        self.more_choice_button = wx.Button(self.adv_select_panel, label='More', pos=(246, 29), size=(40, 27))
-        self.more_choice_button.Bind(wx.EVT_BUTTON, self.more_choice_button_fun)
-        self.adv_confirm_button = wx.Button(self.adv_select_panel, pos=(85, 100), size=(100,-1), label=u'确定')
-        self.adv_confirm_button.Bind(wx.EVT_BUTTON, self.unshow_adv_select_panel)
-        self.adv_select_table1 = wx.ComboBox(self.adv_select_panel, pos=(10, 30), size=(100, -1), choices=select_item_list2,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_select_item1 = wx.ComboBox(self.adv_select_panel, pos=(115, 30), size=(60, -1), choices=self.select_item_list,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_symbol1 = wx.TextCtrl(self.adv_select_panel, pos=(180, 30), size=(20, -1))
-        self.adv_items_value1 = wx.TextCtrl(self.adv_select_panel, pos=(205, 30), size=(40, -1))
-        self.adv_select_time_use += 1
-
-    def unshow_adv_select_panel(self, event):
-        print "more_choice_time:" + str(self.more_choice_time)
-        self.more_choice_button.Show(False)
-        self.adv_select_table1.Show(False)
-        self.adv_select_item1.Show(False)
-        self.adv_symbol1.Show(False)
-        self.adv_items_value1.Show(False)
-        if self.more_choice_time == 2:
-            self.adv_select_table2.Show(False)
-            self.adv_select_item2.Show(False)
-            self.adv_symbol2.Show(False)
-            self.adv_items_value2.Show(False)
-        self.adv_confirm_button.Show(False)
-        self.real_adv_fun()
-        self.more_choice_time = 1
-
-    def real_adv_fun(self):
-        print "test:"+ str(self.more_choice_time)
-        table_name1_pos = self.adv_select_table1.GetSelection()
-        table_name1 = self.adv_select_table1.GetItems()[table_name1_pos]
-        items_pos1 = self.adv_select_item1.GetSelection()
-        item_name1 = self.adv_select_item1.GetItems()[items_pos1]
-        symbol1 = self.adv_symbol1.GetRange(0,6)
-        value1 = self.adv_items_value1.GetRange(0,10)
-        if self.more_choice_time > 1:
-            table_name2_pos = self.adv_select_table2.GetSelection()
-            table_name2 = self.adv_select_table2.GetItems()[table_name2_pos]
-            items_pos2 = self.adv_select_item2.GetSelection()
-            item_name2 = self.adv_select_item2.GetItems()[items_pos2]
-            symbol2 = self.adv_symbol2.GetRange(0,6)
-            value2 = self.adv_items_value2.GetRange(0,10)
-            sqlste = self.sqlstament.adv_query(table_name1,item_name1,symbol1,value1,
-                                               table_name2,item_name2,symbol2,value2, 2)
-        else:
-            sqlste = self.sqlstament.adv_query(table_name1, item_name1, symbol1, value1, 1)
-        if sqlste is not None:
-            print sqlste
-            self.test_grid(sqlste)
-
-    def show_adv_select_panel(self):
-        print "more1"
-        self.more_choice_button.Show(True)
-        self.adv_select_table1.Show(True)
-        self.adv_select_item1.Show(True)
-        self.adv_symbol1.Show(True)
-        self.adv_items_value1.Show(True)
-        self.adv_confirm_button.Show(True)
-        self.more_choice_time = 1
-
-    def more_choice_2(self):
-        print "more2"
-        self.adv_select_table2.Show(True)
-        self.adv_select_item2.Show(True)
-        self.adv_symbol2.Show(True)
-        self.adv_items_value2.Show(True)
-        self.more_choice_time = 2
-
-    def more_choice_button_fun(self, event):
-        if self.adv_select_time_use > 1 and self.more_use_time > 1:
-            self.more_choice_2()
-            return 0
-        self.more_use_time = 2
-        self.more_choice_time += 1
-        select_item_list2 = [u'学生基本信息', u'学生成绩信息', u'学生奖惩信息']
-        self.adv_select_table2 = wx.ComboBox(self.adv_select_panel, pos=(10, 70), size=(100, -1), choices=select_item_list2,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_select_item2 = wx.ComboBox(self.adv_select_panel, pos=(115, 70), size=(60, -1), choices=self.select_item_list,
-                                        style=wx.CB_DROPDOWN)
-        self.adv_symbol2 = wx.TextCtrl(self.adv_select_panel, pos=(180, 70), size=(20, -1))
-        self.adv_items_value2 = wx.TextCtrl(self.adv_select_panel, pos=(205, 70), size=(40, -1))
 
     def delete_info(self, event):
         stunum = "00000000"
