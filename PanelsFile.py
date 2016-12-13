@@ -586,7 +586,11 @@ class PrizeOfStudent(wx.Panel):
         except Exception as e:
             print e
             pass
+<<<<<<< HEAD
         self.test_grid('select * from 学生奖惩信息')
+=======
+        self.test_grid('select * from 学生基本信息')
+>>>>>>> origin/master
 
     def advance_quire_step1(self, event):
         try:

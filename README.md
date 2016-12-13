@@ -1,4 +1,4 @@
-# MySQLCurriculumDesign
+﻿# MySQLCurriculumDesign
 注意，这不是爬虫文件，起名spider只是为了隐藏。<br>
 测试文件,功能完善中.<br>
 <p align="right">20161105</p>
@@ -6,4 +6,4 @@
 等交完作业后，就不管了，随便用.......谢谢合作，及格不易，高抬贵手。<br>
 <p align="right">20161114</p>
 Auther   zas<br>
-GroupName  老子就是来打酱油的<br>
+GroupName  打酱油<br>
