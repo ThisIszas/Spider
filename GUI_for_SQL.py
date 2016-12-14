@@ -11,7 +11,7 @@ import wx
 import wx.grid  # wx提供的一个创建的表格方法
 import PanelsFile  # 自定义的界面布局文件
 from SQL_test import MySQLTest  # 自定义的数据库操作文件
-
+import base64
 
 class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
     def __init__(self, *args, **kwargs):
@@ -34,7 +34,10 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
 
         self.notebook = wx.Notebook(self.login_panel, size=(830, 400))  # 在登录面板里"login_panel"里添加标签页面板
         self.notebook.Show(False)  # 因为一开始要显示得是登录页,所以先隐藏标签页
+        something = "QXV0aG9yOtajwaIg1cW2rOyzINWyyPO7qg=="
+        author = base64.b64decode(something)
 
+        self.authors = wx.StaticText(self.login_panel, label=author, pos=(330, 250))
         self.login_name_Label = wx.StaticText(self.login_panel, label=u"学生成绩管理系统")
         # 在login_panel内添加一个标签,标签内容为"学生成绩管理系统", u表示将后面内容按UTF-8格式编码
         self.confirm_button = wx.Button(self.login_panel, label=u"登录")  # 添加一个按钮,按钮上显示"登录"
@@ -145,8 +148,8 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.register_button.Show(show_elements)
         self.register_code.Show(show_elements)
         self.register_code_text.Show(show_elements)
+        self.authors.Show(show_elements)
 
-# 懒得写了,其他的注释看心情
 app = wx.App(False)
 frame = RebuildFrame(None, title=u'学生数据库管理系统')
 frame.Center()
