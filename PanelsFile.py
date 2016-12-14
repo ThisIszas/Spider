@@ -451,8 +451,6 @@ class GradesOfStudent(wx.Panel):
         if stu_infos:
             splited_stu_info = stu_infos.split(' ')
             sqlsta = self.sqlstament.insert_info_2(self.table_name, splited_stu_info)
-            #print sqlsta
-            #self.sqlstament.execute_statement(sqlsta)
 
     def query_info(self, event):
         self.testgrid.Destroy()
@@ -586,11 +584,8 @@ class PrizeOfStudent(wx.Panel):
         except Exception as e:
             print e
             pass
-<<<<<<< HEAD
         self.test_grid('select * from 学生奖惩信息')
-=======
-        self.test_grid('select * from 学生基本信息')
->>>>>>> origin/master
+
 
     def advance_quire_step1(self, event):
         try:
