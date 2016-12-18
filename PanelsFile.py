@@ -83,8 +83,8 @@ class BaseInfoOfStudentPanel(wx.Panel):
                                         style=wx.CB_DROPDOWN)
         self.adv_select_item1 = wx.ComboBox(self.adv_select_panel, pos=(115, 30), size=(60, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
-        self.adv_symbol1 = wx.TextCtrl(self.adv_select_panel, pos=(180, 30), size=(20, -1))
-        self.adv_items_value1 = wx.TextCtrl(self.adv_select_panel, pos=(205, 30), size=(40, -1))
+        self.adv_symbol1 = wx.TextCtrl(self.adv_select_panel, value=">", pos=(180, 30), size=(20, -1))
+        self.adv_items_value1 = wx.TextCtrl(self.adv_select_panel, value="1", pos=(205, 30), size=(40, -1))
         self.adv_select_time_use += 1
 
     def unshow_adv_select_panel(self, event):
@@ -138,6 +138,8 @@ class BaseInfoOfStudentPanel(wx.Panel):
 
     def more_choice_2(self):
         print "more2"
+        self.adv_symbol1.Show(False)
+        self.adv_items_value1.Show(False)
         self.adv_select_table2.Show(True)
         self.adv_select_item2.Show(True)
         self.adv_symbol2.Show(True)
@@ -155,8 +157,10 @@ class BaseInfoOfStudentPanel(wx.Panel):
                                         style=wx.CB_DROPDOWN)
         self.adv_select_item2 = wx.ComboBox(self.adv_select_panel, pos=(115, 70), size=(60, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
-        self.adv_symbol2 = wx.TextCtrl(self.adv_select_panel, pos=(180, 70), size=(20, -1))
-        self.adv_items_value2 = wx.TextCtrl(self.adv_select_panel, pos=(205, 70), size=(40, -1))
+        self.adv_symbol2 = wx.TextCtrl(self.adv_select_panel, value=u">", pos=(180, 70), size=(20, -1))
+        self.adv_items_value2 = wx.TextCtrl(self.adv_select_panel, value=u"1", pos=(205, 70), size=(40, -1))
+        self.adv_symbol1.Show(False)
+        self.adv_items_value1.Show(False)
 
     def delete_info(self, event):
         stunum = "00000000"
@@ -345,8 +349,8 @@ class GradesOfStudent(wx.Panel):
                                         style=wx.CB_DROPDOWN)
         self.adv_select_item1 = wx.ComboBox(self.adv_select_panel, pos=(115, 30), size=(60, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
-        self.adv_symbol1 = wx.TextCtrl(self.adv_select_panel, pos=(180, 30), size=(20, -1))
-        self.adv_items_value1 = wx.TextCtrl(self.adv_select_panel, pos=(205, 30), size=(40, -1))
+        self.adv_symbol1 = wx.TextCtrl(self.adv_select_panel, value=u">", pos=(180, 30), size=(20, -1))
+        self.adv_items_value1 = wx.TextCtrl(self.adv_select_panel, value=u"1", pos=(205, 30), size=(40, -1))
         self.adv_select_time_use += 1
 
     def unshow_adv_select_panel(self, event):
@@ -405,6 +409,8 @@ class GradesOfStudent(wx.Panel):
         self.adv_symbol2.Show(True)
         self.adv_items_value2.Show(True)
         self.more_choice_time = 2
+        self.adv_symbol1.Show(False)
+        self.adv_items_value1.Show(False)
 
     def more_choice_button_fun(self, event):
         if self.adv_select_time_use > 1 and self.more_use_time > 1:
@@ -417,8 +423,10 @@ class GradesOfStudent(wx.Panel):
                                         style=wx.CB_DROPDOWN)
         self.adv_select_item2 = wx.ComboBox(self.adv_select_panel, pos=(115, 70), size=(60, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
-        self.adv_symbol2 = wx.TextCtrl(self.adv_select_panel, pos=(180, 70), size=(20, -1))
-        self.adv_items_value2 = wx.TextCtrl(self.adv_select_panel, pos=(205, 70), size=(40, -1))
+        self.adv_symbol2 = wx.TextCtrl(self.adv_select_panel, value=u">", pos=(180, 70), size=(20, -1))
+        self.adv_items_value2 = wx.TextCtrl(self.adv_select_panel, value=u"1", pos=(205, 70), size=(40, -1))
+        self.adv_symbol1.Show(False)
+        self.adv_items_value1.Show(False)
 
     def refresh(self, event):
         try:
@@ -605,10 +613,10 @@ class PrizeOfStudent(wx.Panel):
         self.adv_confirm_button.Bind(wx.EVT_BUTTON, self.unshow_adv_select_panel)
         self.adv_select_table1 = wx.ComboBox(self.adv_select_panel, pos=(10, 30), size=(100, -1), choices=select_item_list2,
                                         style=wx.CB_DROPDOWN)
-        self.adv_select_item1 = wx.ComboBox(self.adv_select_panel, pos=(115, 30), size=(60, -1), choices=self.select_item_list,
+        self.adv_select_item1 = wx.ComboBox(self.adv_select_panel, value=u"Ñ§ºÅÏ¢", pos=(115, 30), size=(60, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
-        self.adv_symbol1 = wx.TextCtrl(self.adv_select_panel, pos=(180, 30), size=(20, -1))
-        self.adv_items_value1 = wx.TextCtrl(self.adv_select_panel, pos=(205, 30), size=(40, -1))
+        self.adv_symbol1 = wx.TextCtrl(self.adv_select_panel, value=u">", pos=(180, 30), size=(20, -1))
+        self.adv_items_value1 = wx.TextCtrl(self.adv_select_panel, value=u"1", pos=(205, 30), size=(40, -1))
         self.adv_select_time_use += 1
 
     def unshow_adv_select_panel(self, event):
@@ -666,6 +674,8 @@ class PrizeOfStudent(wx.Panel):
         self.adv_select_item2.Show(True)
         self.adv_symbol2.Show(True)
         self.adv_items_value2.Show(True)
+        self.adv_symbol1.Show(False)
+        self.adv_items_value1.Show(False)
         self.more_choice_time = 2
 
     def more_choice_button_fun(self, event):
@@ -679,8 +689,10 @@ class PrizeOfStudent(wx.Panel):
                                         style=wx.CB_DROPDOWN)
         self.adv_select_item2 = wx.ComboBox(self.adv_select_panel, pos=(115, 70), size=(60, -1), choices=self.select_item_list,
                                         style=wx.CB_DROPDOWN)
-        self.adv_symbol2 = wx.TextCtrl(self.adv_select_panel, pos=(180, 70), size=(20, -1))
-        self.adv_items_value2 = wx.TextCtrl(self.adv_select_panel, pos=(205, 70), size=(40, -1))
+        self.adv_symbol2 = wx.TextCtrl(self.adv_select_panel, value=u">", pos=(180, 70), size=(20, -1))
+        self.adv_items_value2 = wx.TextCtrl(self.adv_select_panel, value=u"1", pos=(205, 70), size=(40, -1))
+        self.adv_symbol1.Show(False)
+        self.adv_items_value1.Show(False)
 
     def delete_info(self, event):
         stunum = "00000000"
