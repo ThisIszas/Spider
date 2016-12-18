@@ -13,6 +13,7 @@ import PanelsFile  # 自定义的界面布局文件
 from SQL_test import MySQLTest  # 自定义的数据库操作文件
 import base64
 
+
 class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
     def __init__(self, *args, **kwargs):
         super(RebuildFrame, self).__init__(*args, **kwargs)
@@ -86,7 +87,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         username = self.nameTextCtrl.GetRange(0, 16)  # 注册时获取用户名输入框内的文字
         password = self.passwordTextCtrl.GetRange(0, 20)  # 注册时获取密码输入框内的文字
         register_code = self.register_code_text.GetRange(0, 30)  # 注册时获取注册码输入框内的文字
-        if register_code != "sjuxhnsk45fds":  # 判断注册码是否正确
+        if register_code != "qaz":  # 判断注册码是否正确
             wx.MessageBox(u'注册码错误,拒绝注册,请检查注册码.', 'Warning', wx.OK | wx.ICON_INFORMATION)
             return 0
         if len(username) == 0 or len(password) == 0:  # 很明显了
