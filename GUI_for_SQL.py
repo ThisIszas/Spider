@@ -30,21 +30,24 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.SetMenuBar(menu_bar)  # 设置菜单栏到合适位置
 
         self.login_panel = wx.Panel(self, 1)  # 新建一个面板,用作登录页
+        self.login_panel.Bind(wx.EVT_ERASE_BACKGROUND, self.on_erase_back)  # 背景图片
 
         self.notebook = wx.Notebook(self.login_panel, size=(830, 400))  # 在登录面板里"login_panel"里添加标签页面板
         self.notebook.Show(False)  # 因为一开始要显示得是登录页,所以先隐藏标签页
         something = "QXV0aG9yOtajwaIg1cW2rOyzINWyyPO7qg=="
         author = base64.b64decode(something)
 
-        self.authors = wx.StaticText(self.login_panel, label=author, pos=(330, 250))
-        self.login_name_Label = wx.StaticText(self.login_panel, label=u"学生成绩管理系统")
-        # 在login_panel内添加一个标签,标签内容为"学生成绩管理系统", u表示将后面内容按UTF-8格式编码
+        title_font = wx.Font(16, wx.SWISS, wx.NORMAL, wx.BOLD)
+
+        self.authors = TPStaticText(self.login_panel, ids=1, label=author, pos=(330, 250))
+        self.login_name_Label = TPStaticText(self.login_panel, ids=1, label="学生成绩管理系统")
+        self.login_name_Label.SetFont(title_font)
         self.confirm_button = wx.Button(self.login_panel, label=u"登录")  # 添加一个按钮,按钮上显示"登录"
         self.register_button = wx.Button(self.login_panel, label=u'注册', pos=(407, 210), size=(73, -1))
         # 添加一个按钮,按钮上显示"注册",设置大小宽度为73,长度默认值,位置为相对坐标(407, 210)处
-        self.username_label = wx.StaticText(self.login_panel, label=u"用户名")  # 同上
-        self.password = wx.StaticText(self.login_panel, label=u"密码")  # 同上
-        self.register_code = wx.StaticText(self.login_panel, label=u'注册码', pos=(290, 120))  # 同上
+        self.username_label = TPStaticText(self.login_panel, ids=1, label="用户名")
+        self.password = TPStaticText(self.login_panel, ids=1, label="密码")
+        self.register_code = TPStaticText(self.login_panel, ids=1, label="注册码", pos=(290, 120))
         self.register_code_text = wx.TextCtrl(self.login_panel, pos=(330, 117), size=(150, 25))  # 新建一个输入框,用以输入注册码
         self.register_code.Show(False)  # 因为注册页面要在点了注册后才出现,所以一开始全都隐藏
         self.register_code_text.Show(False)  # 同上
@@ -62,7 +65,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
 
     def do_layout(self):
         for control, x, y, width, height in \
-                [(self.login_name_Label, 360, 90, -1, -1),
+                [(self.login_name_Label, 315, 90, -1, -1),
                  (self.username_label, 290, 150, -1, -1),
                  (self.nameTextCtrl, 330, 148, 150, 25),
                  (self.password, 295, 183, -1, -1),
@@ -103,7 +106,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.register_code.Show(False)
         self.register_code_text.Show(False)
 
-    def confisrm_button(self, event):  # 确认登录函数
+    def confisrm_button(self, event):  # 确认登录
         print event
         username = self.nameTextCtrl.GetRange(0, 16)  # 同上
         password = self.passwordTextCtrl.GetRange(0, 20)  # 同上
@@ -148,6 +151,35 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.register_code.Show(show_elements)
         self.register_code_text.Show(show_elements)
         self.authors.Show(show_elements)
+
+    def on_erase_back(self, event):
+        dc = event.GetDC()
+        if not dc:
+            dc = wx.ClientDC(self)
+            rect = self.GetUpdateRegion().GetBox()
+            dc.SetClippingRect(rect)
+        dc.Clear()
+        bmp = wx.Bitmap("background.jpg")
+        dc.DrawBitmap(bmp, 0, 0)
+
+
+class TPStaticText(wx.StaticText):
+    """ transparent StaticText """
+    def __init__(self, parent, ids, label='',
+                 pos=wx.DefaultPosition,
+                 size=wx.DefaultSize,
+                 style=0,
+                 ):
+        style |= wx.CLIP_CHILDREN | wx.TRANSPARENT_WINDOW
+        wx.StaticText.__init__(self, parent, ids, label, pos, size, style=style)
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
+
+    def OnPaint(self, event):
+        event.Skip()
+        dc = wx.GCDC(wx.PaintDC(self))
+        dc.SetFont(self.GetFont())
+        dc.DrawText(self.GetLabel(), 0, 0)
 
 app = wx.App(False)
 frame = RebuildFrame(None, title=u'学生数据库管理系统')

@@ -1,8 +1,8 @@
 import wx.grid
 
-class GenericTable(wx.grid.PyGridTableBase):
 
-        def __init__(self,data,rowLabels=None,colLabels=None):
+class GenericTable(wx.grid.PyGridTableBase):
+        def __init__(self, data, rowLabels=None, colLabels=None):
                 wx.grid.PyGridTableBase.__init__(self)
                 self.data = data
                 self.rowLabels = rowLabels
