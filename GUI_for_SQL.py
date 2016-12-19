@@ -21,7 +21,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.show_elements = False  # 用于控制面板元素是否显示的参数
         self.sqlexecute = MySQLTest()  # 实例化一个SQLexecute类,用于后面的数据库操作
         filemenu = wx.Menu()  # 创建一个菜单
-        filemenu.Append(wx.ID_ABOUT, "&About", " Information about this program.")  # 往菜单里加"About"
+        filemenu.Append(wx.ID_ABOUT, "&About", " 学生数据管理.")  # 往菜单里加"About"
         filemenu.AppendSeparator()  # 添加分割线
         filemenu.Append(wx.ID_INFO, "&Authors", " 郑立,詹润华,张冬斐")  # 同上
 
@@ -152,7 +152,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         self.register_code_text.Show(show_elements)
         self.authors.Show(show_elements)
 
-    def on_erase_back(self, event):
+    def on_erase_back(self, event):  # 设置背景图片
         dc = event.GetDC()
         if not dc:
             dc = wx.ClientDC(self)
@@ -163,7 +163,7 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         dc.DrawBitmap(bmp, 0, 0)
 
 
-class TPStaticText(wx.StaticText):
+class TPStaticText(wx.StaticText):  # 设置StaticText控件背景色透明
     """ transparent StaticText """
     def __init__(self, parent, ids, label='',
                  pos=wx.DefaultPosition,
