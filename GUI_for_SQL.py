@@ -5,7 +5,7 @@ Author:郑立, 詹润华, 张冬斐
 Version:1.0
 Finish Time:2016/11/14
 Github: https://github.com/ThisIszas/Spider
-OsChina: https://git.oschina.net/heyzas1/SQLDesign
+OsChina: https://git.oschina.net/heyzas1/shujuku
 """
 import wx
 import wx.grid  # wx提供的一个创建的表格方法
@@ -23,12 +23,10 @@ class RebuildFrame(wx.Frame):  # 主框体,所有界面都往Frame里加
         filemenu = wx.Menu()  # 创建一个菜单
         filemenu.Append(wx.ID_ABOUT, "&About", " Information about this program.")  # 往菜单里加"About"
         filemenu.AppendSeparator()  # 添加分割线
-        filemenu.Append(wx.ID_EXIT, "&Save", " Save information.")  # 同上
-        filemenu.AppendSeparator()
-        filemenu.Append(wx.ID_EXIT, "&Exit", " Terminate the program.")
+        filemenu.Append(wx.ID_INFO, "&Authors", " 郑立,詹润华,张冬斐")  # 同上
 
         menu_bar = wx.MenuBar()  # 创建一个菜单栏
-        menu_bar.Append(filemenu, "&File")  # 往菜单栏里添加filemenu
+        menu_bar.Append(filemenu, "&Infos")  # 往菜单栏里添加filemenu
         self.SetMenuBar(menu_bar)  # 设置菜单栏到合适位置
 
         self.login_panel = wx.Panel(self, 1)  # 新建一个面板,用作登录页
